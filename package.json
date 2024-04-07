@@ -1,0 +1,20 @@
+{
+  "dependencies": {
+    "@turf/nearest-point-on-line": "^6.5.0",
+    "@turf/turf": "^6.5.0",
+    "geojson-path-finder": "^2.0.2",
+    "mapbox-gl": "^3.2.0",
+    "mapbox-gl-indoorequal": "^0.2.16"
+  },
+  "name": "DP-Navigation-main",
+  "version": "1.0.0",
+  "main": "index.html",
+  "license": "MIT",
+  "devDependencies": {
+    "parcel": "^2.12.0",
+    "parcel-plugin-static-files-copy": "^2.6.0"
+  },
+  "staticFiles": {
+    "staticPath": "node_modules/mapbox-gl-indoorequal/sprite"
+  }
+}

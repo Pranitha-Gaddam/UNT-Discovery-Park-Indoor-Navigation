@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script type="importmap">
+        {
+          "imports": {
+            "geojson-path-finder": "https://esm.sh/geojson-path-finder@2.0.2",
+            "@turf/nearest-point-on-line": "https://esm.sh/@turf/nearest-point-on-line@6.5.0",
+            "@turf/turf": "https://esm.sh/@turf/turf@6.5.0"
+          }
+        }
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNT Discovery Park Navigation</title>
+
+    <link rel="icon" href="/img/favicon.svg" class="favicon">
+
+    <!--styelsheet-->
+    <!--bootstrap 5-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <!--mapbox-gl-->
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.css" rel="stylesheet">
+    <!--mapbox-gl-indoorequal-->
+    <link href="https://unpkg.com/mapbox-gl-indoorequal@latest/mapbox-gl-indoorequal.css" rel="stylesheet" />
+    <!--mapbox-gl-geocoder-->
+    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css">
+    <!--mapbox-gl-directions-->
+    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.2.0/mapbox-gl-directions.css">
+    <!--mapbox-gl from node modules-->
+    <link rel="stylesheet" href="node_modules/mapbox-gl/src/css/mapbox-gl.css" type="text/css">
+    <!--my style.css-->
+    <link href="style.css" rel="stylesheet" type="text/css" />
+
+
+    
+</head>
+
+
+<body>
+
+    <!-- Modal -->
+    <div class="modal fade" id="adjustmentModal" tabindex="-1" aria-labelledby="adjustmentModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="adjustmentModalLabel">Color Adjustment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="adjustmentButtons" class="adjustment-buttons">
+                    <!-- Color wheel container -->
+                    <div id="hueWheelContainer"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="savePreferences()">Save</button>
+                <button type="button" class="btn btn-primary" onclick="resetPreferences()">Reset</button>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Feedback Modal -->
+    <div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="feedbackModalLabel">Feedback</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="feedbackForm">
+                        <div class="mb-3">
+                            <label for="feedbackText" class="form-label">Your Feedback</label>
+                            <textarea class="form-control" id="feedbackText" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--mapping-->        
+    <div id="map">
+        <div class="info_bar">
+            <form id="searchbar" class="infobar-li"> 
+                <a class="menu-icon" data-bs-toggle="offcanvas" href="#sidebar-items" role="button" aria-controls="offcanvasExample"><svg xmlns="http://www.w3.org/2000/svg" height="40" viewBox="0 -960 960 960" width="24" ><path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"/></svg></a>
+            </form>
+            <div id="pois-box">
+                <button  id="pois">pois button</button>
+                <button  id="pois">pois button</button>
+                <button  id="pois">pois button</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar-items" aria-labelledby="offcanvasExampleLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasExampleLabel">Discovery Park Indoor Navigation</h5>
+          <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <ul class="sidebar" style="font-family: 'Arial', sans-serif; font-size: 16px;">
+                <li><a class = "btn sidebar-items" href="#" data-bs-toggle="modal" data-bs-target="#adjustmentModal" onclick="createSliders()">Adjust Color</a></li>
+                <li><a class = "btn sidebar-items" href="#" id="feedbackButton" data-bs-toggle="modal" data-bs-target="#feedbackModal">Feedback</a></li>
+                <li class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="wheelchairToggle" onchange="toggleWheelchairRouting()">
+                    <label class="form-check-label" for="wheelchairToggle">Wheelchair Routing</label>
+                </li>
+            </ul>
+        </div>
+    </div> 
+    
+ 
+    <!--recenter button-->
+    <button class="btn btn-outline-success" type="button" id="recenter"
+    onclick="goBackToCenter()"><i class="bi bi-house-fill"></i></button>
+
+
+
+    <!--all scripts start here-->
+    <script src="https://unpkg.com/mapbox-gl-indoorequal@latest/dist/mapbox-gl-indoorequal.umd.min.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.2.0/mapbox-gl-directions.js"></script>
+    <script type="module" src="map.js"></script>
+    <script type="module" src="script.js"></script> <!-- .js file for color contrast features-->
+    //<script type="module" src="routing.js"></script>
+    <script src="dijkstra.js"></script>
+    <script src="pathData.js"></script>
+    <script src="turn.js"></script>
+    <!-- <script>
+        mapboxgl.accessToken = 'pk.eyJ1Ijoia2ltdm8yMTExIiwiYSI6ImNsdGcwYmhoajB2czcyanA3YWlpZGh6dHQifQ.Niu8tgHPbGDSq09zYRBAFg';
+
+        const map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v11', // Example style, replace with your own
+            center: [-97.153715, 33.254811], // Example center coordinates
+            zoom: 19.7 // Example zoom level
+        });
+
+        map.on('style.load', function() {
+        const indoorEqual = new IndoorEqual(map, { apiKey: 'iek_WQaPa637GiMUujPIMZtRAm1FbHsX' });
+        indoorEqual.loadSprite('./node_modules/mapbox-gl-indoorequal/sprite/indoorequal');
+
+        // Function to handle changing the level based on the selected option
+        function changeLevel() {
+            // Get the selected value from the floor selector
+            const selectedLevel = document.getElementById('floorSelector').value;
+
+            // Call a function to change the level based on the selected option
+            indoorEqual.setLevel(selectedLevel);
+        }
+
+
+        map.addControl(indoorEqual);
+        indoorEqual.setLevel('1');
+        //goBackToCenter() and map.addcontrol() moved to script.js
+
+
+
+        // Add zoom and rotation controls to the map.
+        const nav = new mapboxgl.NavigationControl({
+            visualizePitch: true
+        });
+        map.addControl(nav, 'top-right');
+    
+
+        // Fetch the data.json file
+        fetch('data/data.geojson')
+            .then(response => response.json()) // Parse the JSON data
+            .then(data => {
+                // Use the data as needed
+                console.log(data); // Logging the fetched data
+                // Pass the fetched data to the forwardGeocoder function
+                initializeMap(data);
+            })
+            .catch(error => console.error('Error fetching data:', error));
+
+        function initializeMap(data) {
+            // Your forwardGeocoder function using the fetched data
+            function forwardGeocoder(query) {
+                const matchingFeatures = [];
+                for (const feature of data.features) {
+                    // Handle queries with different capitalization
+                    // than the source data by calling toLowerCase().
+                    if (feature.id.toLowerCase().includes(query.toLowerCase())) {
+                        // Add a room emoji as a prefix for custom
+                    if (feature.id === 'restroom' || feature.id === 'stair' || feature.id === 'elevator') {
+                        let name = feature.id;
+                        if (feature.properties.type !== null) {
+                            name += `: ${feature.properties.type}`;
+                        }
+                        feature['place_name'] = name;
+                    } else {
+                        feature['place_name'] = `🏠 Room ${feature.id}`;
+                    }
+                    feature['center'] = feature.geometry.coordinates;
+                    feature['place_type'] = ['room'];
+
+
+                        matchingFeatures.push(feature);
+                        
+
+                        // Check if the room is on floor 2 and switch the level accordingly
+                        if (feature.properties.level === 2) {
+                            indoorEqual.setLevel('2');
+                            //startRoom = feature.geometry.coordinates;
+                        } else if (feature.properties.level === 1) {
+                            indoorEqual.setLevel('1');  
+                        }
+                        startRoom = feature.geometry.coordinates;
+                        startRoute(); 
+                    }
+                }
+                return matchingFeatures;
+            }
+
+            // Add the control to the map.
+            const geocoder = new MapboxGeocoder({
+                accessToken: mapboxgl.accessToken,
+                localGeocoder: forwardGeocoder,
+                zoom: 25,
+                placeholder: 'Search for rooms',
+                mapboxgl: mapboxgl
+            });
+
+            // Add the geocoder to your existing searchbar form
+            const searchForm = document.getElementById('searchbar');
+            searchForm.appendChild(geocoder.onAdd(map));
+            
+        }
+        });
+
+        map.on('load', () => {
+            map.addSource("route", {
+                    "type": "geojson",
+                    "data": "K2path.geojson"
+            });
+
+            map.addLayer({
+                    "id": "routes-layer",
+                    "type": "line",
+                    "source": "route",
+                    "layout": {
+                        'line-join': 'round',
+                        'line-cap': 'round'
+                    },
+                    "paint": {
+                            'line-color': '#888',
+                            'line-width': 8
+                    }
+            });
+        });
+
+    </script> -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+        integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
