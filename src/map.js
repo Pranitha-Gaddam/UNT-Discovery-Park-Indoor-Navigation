@@ -150,7 +150,7 @@ mapboxgl.accessToken = 'pk.eyJ1Ijoia2ltdm8yMTExIiwiYSI6ImNsdGcwYmhoajB2czcyanA3Y
                 const handleSearchButtonClick = (query, map, markersArray) => {
                     removeAllMarkers(markersArray); // Remove all markers first
                     const matchingFeatures = forwardGeocoder(query);
-                    const selectedLevel = parseInt(floorSelector.value);
+                    const selectedLevel = parseInt(1);
                     const featuresOnSelectedLevel = matchingFeatures.filter(feature => feature.properties.level === selectedLevel);
                     addMarkers(featuresOnSelectedLevel, map, markersArray);
                 };
