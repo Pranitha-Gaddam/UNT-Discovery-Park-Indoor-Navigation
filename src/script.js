@@ -174,18 +174,8 @@ function updateBackgroundColor(saturate) {
             alert('An error occurred while submitting feedback. Please try again later.');
         });
     });
-    
 
-// mapping script
 
-// Function to go back to the center of the map
-function goBackToCenter() {
-    map.flyTo({
-        center: [-97.153474, 33.254411], // Example center coordinates
-        zoom: 18, // Example zoom level
-        essential: true // prevents user from cancelling the transition
-    });
-}
 
  // Add geolocate control to the map.
  map.addControl(
