@@ -187,6 +187,15 @@
             });
         });
 
+        document.getElementById('recenter').addEventListener('click', () => {
+            // Fly to a center location
+            map.flyTo({
+                center: [-97.153474, 33.254411], 
+                zoom: 18, // Example zoom level
+                essential: true // prevents user from cancelling the transition
+            });
+        });
+
     </script>
 
     <!--all scripts start here-->
