@@ -12,15 +12,6 @@ console.log("end: ", endRoom);
             zoom: 19.7 // Example zoom level
         });
 
-        // Function to go back to the center of the map
-        function goBackToCenter() {
-            map.flyTo({
-                center: [-97.153474, 33.254411], // Example center coordinates
-                zoom: 18, // Example zoom level
-                essential: true // prevents user from cancelling the transition
-            });
-        }
-
         map.on('style.load', function() {
             const indoorEqual = new IndoorEqual(map, { apiKey: 'iek_WQaPa637GiMUujPIMZtRAm1FbHsX' });
             indoorEqual.loadSprite('./node_modules/mapbox-gl-indoorequal/sprite/indoorequal');
