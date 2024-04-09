@@ -1,6 +1,11 @@
-mapboxgl.accessToken = 'pk.eyJ1Ijoia2ltdm8yMTExIiwiYSI6ImNsdGcwYmhoajB2czcyanA3YWlpZGh6dHQifQ.Niu8tgHPbGDSq09zYRBAFg';
+import { startRoute } from "./routing.js";
 
-        const map = new mapboxgl.Map({
+mapboxgl.accessToken = 'pk.eyJ1Ijoia2ltdm8yMTExIiwiYSI6ImNsdGcwYmhoajB2czcyanA3YWlpZGh6dHQifQ.Niu8tgHPbGDSq09zYRBAFg';
+let startRoom = undefined;
+let endRoom = undefined;
+console.log("start: ", startRoom);
+console.log("end: ", endRoom);
+        window.map = new mapboxgl.Map({
             container: 'map',
             style: 'mapbox://styles/mapbox/streets-v11', // Example style, replace with your own
             center: [-97.153715, 33.254811], // Example center coordinates
@@ -120,11 +125,13 @@ mapboxgl.accessToken = 'pk.eyJ1Ijoia2ltdm8yMTExIiwiYSI6ImNsdGcwYmhoajB2czcyanA3Y
                 geocoder1.on('result', function (e) {
                     var coordinates = e.result.geometry.coordinates;
                     startRoom = coordinates;
+                    console.log("start in func: ", startRoom);
                     updateMapBounds();
                 });
                 geocoder2.on('result', function (e) {
                     var coordinates = e.result.geometry.coordinates;
                     endRoom = coordinates;
+                    console.log("end in func: ", endRoom);
                     updateMapBounds();
                 });
                 
@@ -134,6 +141,10 @@ mapboxgl.accessToken = 'pk.eyJ1Ijoia2ltdm8yMTExIiwiYSI6ImNsdGcwYmhoajB2czcyanA3Y
                         bounds.extend(startRoom);
                         bounds.extend(endRoom);
                         map.fitBounds(bounds, { padding: 50 });
+                        if (startRoom != undefined && endRoom != undefined) {
+                            console.log(findNodeByCoordinate([ -97.15387406945061, 33.25485939795162 ]));
+                            startRoute(startRoom, endRoom);
+                        }
                     }
                 }
 
@@ -198,5 +209,6 @@ mapboxgl.accessToken = 'pk.eyJ1Ijoia2ltdm8yMTExIiwiYSI6ImNsdGcwYmhoajB2czcyanA3Y
                     }
             });
         });
+
 
         

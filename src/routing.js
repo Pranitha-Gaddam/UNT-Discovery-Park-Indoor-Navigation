@@ -1,10 +1,11 @@
-import geojson from "./network.js"
+import geojson from "./network.js";
 import nearestPointOnLine from '@turf/nearest-point-on-line';
 import { lineString, point, distance} from "@turf/turf";
 
-const startRoom = [ -97.15388509288465, 33.25476053520956 ]; // Example point coordinates
-const endRoom = [ -97.15353978483283, 33.254924324421239 ];
 
+// const startRoom = [ -97.15388509288465, 33.25476053520956 ]; // Example point coordinates
+// const endRoom = [ -97.15353978483283, 33.254924324421239 ];
+export function startRoute(startRoom, endRoom) {
 var source = projectPoint(startRoom);
 var destination = projectPoint(endRoom);
 
@@ -15,10 +16,10 @@ console.log("destination point: ", destination.point);
 
 
 
-const r1 = new mapboxgl.Marker()
-.setLngLat(startRoom)
-.addTo(map);
-
+// const r1 = new mapboxgl.Marker()
+// .setLngLat(startRoom)
+// .addTo(map);
+console.log("checkpoint 1");
 // Sample point
 
 // Initialize variables to store the closest line and its projection point
@@ -73,13 +74,13 @@ function findRoute(source, destination) {
 // console.log('Closest projection point:', closestProjection);
 //console.log('Destination line: ', destination.line);
 
-const startMarker = new mapboxgl.Marker()
-.setLngLat(source.point.geometry.coordinates)
-.addTo(map);
+// const startMarker = new mapboxgl.Marker()
+// .setLngLat(source.point.geometry.coordinates)
+// .addTo(map);
 
-const endMarker = new mapboxgl.Marker()
-.setLngLat(destination.point.geometry.coordinates)
-.addTo(map);
+// const endMarker = new mapboxgl.Marker()
+// .setLngLat(destination.point.geometry.coordinates)
+// .addTo(map);
 
 function addPathsLayer(point1, point2) {
     map.addLayer({
@@ -121,6 +122,7 @@ function handlePathsLayer(point1, point2) {
             addPathsLayer(point1, point2);
         });
     }
+    addPathsLayer(point1, point2);
 }
 
 
@@ -166,3 +168,4 @@ function drawRoute(path) {
 }
 var finalPath = findRoute(source, destination);
 drawRoute(finalPath);
+}
