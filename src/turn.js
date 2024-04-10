@@ -15,6 +15,9 @@ function calculateBearing(point1, point2) {
 
 
 function determineTurnType(angle) {
+    if (angle > 180) {
+        angle = angle - (360);
+    }
     if (angle <= 10 && angle >= -10) {
         console.log("Continue straight");
     }
