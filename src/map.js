@@ -180,26 +180,5 @@ console.log("end: ", endRoom);
             indoorEqual.setLevel('1');
         });
 
-        map.on('load', () => {
-            map.addSource("route", {
-                    "type": "geojson",
-                    "data": "data/k1_path.geojson"
-            });
-
-            map.addLayer({
-                    "id": "routes-layer",
-                    "type": "line",
-                    "source": "route",
-                    "layout": {
-                        'line-join': 'round',
-                        'line-cap': 'round'
-                    },
-                    "paint": {
-                            'line-color': '#888',
-                            'line-width': 8
-                    }
-            });
-        });
-
 
         
