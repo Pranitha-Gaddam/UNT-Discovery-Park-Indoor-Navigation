@@ -129,8 +129,8 @@ console.log("end: ", endRoom);
                 function updateMapBounds() {
                     if (startRoom && endRoom) {
                         var bounds = new mapboxgl.LngLatBounds();
-                        bounds.extend(startRoom);
-                        bounds.extend(endRoom);
+                        bounds.extend(startRoom.coordinates);
+                        bounds.extend(endRoom.coordinates);
                         map.fitBounds(bounds, { padding: 50 });
                         if (startRoom.coordinates != undefined && endRoom.coordinates != undefined) {
                             console.log(findNodeByCoordinate([ -97.15387406945061, 33.25485939795162 ]));
