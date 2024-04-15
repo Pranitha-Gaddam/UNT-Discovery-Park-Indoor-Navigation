@@ -1,7 +1,7 @@
 
 function dijkstra(graph, start, end) {
-    console.log("start: ", start);
-    console.log("end: ", end);
+    //console.log("start: ", start);
+    //console.log("end: ", end);
     let distances = {}, previous = {}, unvisited = new Set();
     for (let node in graph) {
         distances[node] = node === start ? 0 : Infinity;
