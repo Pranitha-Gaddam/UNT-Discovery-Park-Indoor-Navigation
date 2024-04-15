@@ -1,8 +1,8 @@
 import { startRoute } from "./routing.js";
 
 mapboxgl.accessToken = 'pk.eyJ1Ijoia2ltdm8yMTExIiwiYSI6ImNsdGcwYmhoajB2czcyanA3YWlpZGh6dHQifQ.Niu8tgHPbGDSq09zYRBAFg';
-let startRoom = undefined;
-let endRoom = undefined;
+let startRoom = {coordinates: undefined, floor: undefined};
+let endRoom = {coordinates: undefined, floor: undefined};
 console.log("start: ", startRoom);
 console.log("end: ", endRoom);
         window.map = new mapboxgl.Map({
@@ -114,14 +114,14 @@ console.log("end: ", endRoom);
                 document.getElementById('end').appendChild(geocoder2.onAdd(map));
 
                 geocoder1.on('result', function (e) {
-                    var coordinates = e.result.geometry.coordinates;
-                    startRoom = coordinates;
+                    startRoom.coordinates = e.result.geometry.coordinates;
+                    startRoom.floor = e.result.properties.level;
                     console.log("start in func: ", startRoom);
                     updateMapBounds();
                 });
                 geocoder2.on('result', function (e) {
-                    var coordinates = e.result.geometry.coordinates;
-                    endRoom = coordinates;
+                    endRoom.coordinates = e.result.geometry.coordinates;
+                    endRoom.floor = e.result.properties.level;
                     console.log("end in func: ", endRoom);
                     updateMapBounds();
                 });
@@ -132,7 +132,7 @@ console.log("end: ", endRoom);
                         bounds.extend(startRoom);
                         bounds.extend(endRoom);
                         map.fitBounds(bounds, { padding: 50 });
-                        if (startRoom != undefined && endRoom != undefined) {
+                        if (startRoom.coordinates != undefined && endRoom.coordinates != undefined) {
                             console.log(findNodeByCoordinate([ -97.15387406945061, 33.25485939795162 ]));
                             startRoute(startRoom, endRoom);
                         }
