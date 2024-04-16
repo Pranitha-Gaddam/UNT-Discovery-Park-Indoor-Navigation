@@ -19,37 +19,15 @@ function determineTurnType(angle) {
         angle = angle - (360);
     }
     if (angle <= 10 && angle >= -10) {
-        console.log("Continue straight");
+        return "Continue straight";
     }
     else if (angle>80 && angle<=100) {
-        console.log("Turn left");
+        return "Turn left";
     }
     else if (angle<=-80 && angle>=-100) {
-        console.log("Turn right");
+        return "Turn right";
     }
 }
-
-
-// Function to generate turn-by-turn directions
-function generateTurnByTurnDirections(route) {
-    const turnByTurnDirections = [];
-    for (let i = 0; i < route.length - 2; i++) {
-        const bearing1 = calculateBearing(route[i], route[i + 1]);
-        const bearing2 = calculateBearing(route[i + 1], route[i + 2]);
-        const angle = calculateAngle(bearing1, bearing2);
-        const turnType = determineTurnType(angle);
-        turnByTurnDirections.push(turnType);
-    }
-    return turnByTurnDirections;
-}
-
-// Example usage:
-const geoRoute = [
-    [-97.15387406945061, 33.25485939795162],
-    [-97.15375011751058, 33.25479742198161],
-    [-97.15358493105212, 33.25471436857528],
-    // Add more points as per your route
-];
 
 // const turnByTurnDirections = generateTurnByTurnDirections(geoRoute);
 // console.log(turnByTurnDirections);
