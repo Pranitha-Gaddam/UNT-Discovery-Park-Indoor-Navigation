@@ -70,20 +70,22 @@ body {
 }
 
 .menu-icon {
-    position: absolute;
-    left: 10px;
+    display: inline-block;
+    margin-left: 10px;
 }
 
 .direction-icon {
     margin-right: 10px;    
-
 }
 
 .mapboxgl-ctrl-geocoder {
     font: 15px / 20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
     position: relative;
-    display: inline-block;
-    width: 40% !important;
+    background-color: white;
+    width: calc(100% - 360px);
+    min-width: calc(100% - 40px);
+    max-width: calc(100% - 40px);
+    margin-left: 0;
     border-radius: 0 0 3px 0;
 }
 
@@ -153,6 +155,8 @@ body {
     height: 75%;
     flex-direction: row;
     border-bottom: solid 2px  rgb(0 0 0 / 10%);
+    align-items: center;
+    justify-content: center;
 }
 
 #backbutton {
@@ -169,12 +173,50 @@ body {
     border-left:  rgb(0 0 0 / 10%);
     width: 92%;
     margin-left: 15px;
+    padding: 10px;
+
 }
 
-#search-box input[type="text"] {
-    width: 85%; /* Adjust the width as needed */
-    height: 35px;
-    margin: 10px 0px 0px 0px;
+#turnbyturn-info {
+    position: absolute;
+    display:none;
+    top: 25%;
+    left: 10px;
+    z-index: 90;
+    background-color: white;
+    width: 20%;
+    box-shadow: 0 0 0 2px rgb(0 0 0 / 10%);
 }
+
+#mile-time{
+    display: flex;
+    padding: 10px;
+    font-size: 20px;
+    border-bottom: solid 2px  rgb(0 0 0 / 10%);
+}
+
+#time {
+    display: inline-block;
+}
+
+#mile {
+    display: inline-block;
+    margin-left: 10px;
+}
+
+#turnbyturn-dir {
+    display: flex inline-block;
+
+}
+
+#eachturn {
+    padding: 10px 0px 10px 20px;
+    font-size: 14px;
+    border-bottom: solid 2px  rgb(0 0 0 / 10%);
+    width: 100%;
+}
+
+
+
 
 

@@ -91,21 +91,28 @@ function floor1to2(source, f1, destination, f2) {
             c2 = coord2;
         }
     }
-    const startMarker = new mapboxgl.Marker({ "color": "#b40219" })
-    .setLngLat(c1.point.geometry.coordinates)
-    .addTo(map);
+    // const startMarker = new mapboxgl.Marker({ "color": "#b40219" })
+    // .setLngLat(c1.point.geometry.coordinates)
+    // .addTo(map);
 
-    const endMarker = new mapboxgl.Marker({ "color": "#b40219" })
-    .setLngLat(c2.point.geometry.coordinates)
-    .addTo(map);
+    // const endMarker = new mapboxgl.Marker({ "color": "#b40219" })
+    // .setLngLat(c2.point.geometry.coordinates)
+    // .addTo(map);
     
     if (bestPath1.path != null) {
         drawRoute(bestPath1.path, source, coord1);
     }
     else {
-        console.log("Continue straight");
+        console.log("Climb stairs");
     }
-    console.log("Climb stairs");
+
+    const turnTypeHTML = `<div id="eachturn">
+    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M480-120 320-280l56-56 64 63v-414l-64 63-56-56 160-160 160 160-56 57-64-64v414l64-63 56 56-160 160Z"/></svg>
+    Next floor </div>`;
+    const turnTypeElement = document.createElement('div');
+    turnTypeElement.innerHTML = turnTypeHTML;
+    document.getElementById('turnbyturn-dir').appendChild(turnTypeElement);
+
     if (bestPath2.path != null) {
         drawRoute(bestPath2.path, coord2, destination);
     }
@@ -154,17 +161,20 @@ function findRoute(source, destination) {
 // console.log('Closest projection point:', closestProjection);
 //console.log('Destination line: ', destination.line);
 
-const startMarker = new mapboxgl.Marker()
-.setLngLat(source.point.geometry.coordinates)
-.addTo(map);
+// const startMarker = new mapboxgl.Marker()
+// .setLngLat(source.point.geometry.coordinates)
+// .addTo(map);
 
-const endMarker = new mapboxgl.Marker()
-.setLngLat(destination.point.geometry.coordinates)
-.addTo(map);
+// const endMarker = new mapboxgl.Marker()
+// .setLngLat(destination.point.geometry.coordinates)
+// .addTo(map);
+
+const layerids = [];
 
 function addPathsLayer(point1, point2) {
+    const layerid = String(point1)+String(point2);
     map.addLayer({
-        "id": String(point1)+String(point2),
+        "id": layerid,
         "type": "line",
         "source": {
             "type": "geojson",
@@ -186,7 +196,15 @@ function addPathsLayer(point1, point2) {
         }
     });
     //console.log('Paths layer added to the map.');
-    return 
+    layerids.push(layerid);
+    return layerid;
+
+}
+
+function removeLayer(layerid) {
+    if (map.getLayer(layerid)) { // Check if the layer exists
+        map.removeLayer(layerid); // Remove the layer
+    }
 }
 
 // Function to handle paths layer loading
@@ -195,12 +213,14 @@ function handlePathsLayer(point1, point2) {
     //console.log("p2: ", point2);
     if (map.loaded()) {
         // Map has finished loading, add paths layer
-        addPathsLayer(point1, point2);
+        const layerid = addPathsLayer(point1, point2);
+
     } else {
         // Map is still loading, wait for load event
         map.on('load', () => {
             // Map has finished loading, add paths layer
-            addPathsLayer(point1, point2);
+            const layerid = addPathsLayer(point1, point2);
+
         });
     }
     addPathsLayer(point1, point2);
@@ -211,7 +231,7 @@ function drawRoute(path, source, destination) {
     //int startNode = 1;
     var firstLoop = 1;
     var bearing1, bearing2;
-    
+
     for (var i=0; i<path.length; i++) {
         //console.log("i is: ", i);
         if (firstLoop == 1) {
@@ -244,13 +264,14 @@ function drawRoute(path, source, destination) {
             bearing1 = bearing2;
             bearing2 = calculateBearing(point1, point2);
         }
-        console.log("Bearing 1: ", bearing1);
-        console.log("Bearing 2: ", bearing2);
         var angle = bearing1-bearing2;
-        console.log("Angle: ", angle);
-        determineTurnType(angle);
+
+        displayTurnbyTurn(angle);
+
     }
+    
 }
+
 
 var finalPath;
 if (startRoom.floor != endRoom.floor) {
@@ -260,4 +281,39 @@ else {
     finalPath = findRoute(source, destination);
     drawRoute(finalPath.path, source, destination);
 }
+
+
+// Event listener for back button click
+document.getElementById('backbutton').addEventListener('click', function() {
+    layerids.forEach(layerId => {
+        removeLayer(layerId); // Remove each layer
+    });
+    const turnByTurnDivs = document.querySelectorAll('#turnbyturn-dir #eachturn');
+    turnByTurnDivs.forEach(div => {
+        div.remove(); // Remove each div
+    });
+});
+
+// displayTurnbyTurn function
+function displayTurnbyTurn(angle) {
+    const turnType = determineTurnType(angle);
+    const turnTypeHTML = `<div id="eachturn">${getSVGForTurnType(turnType)} ${turnType}</div>`;
+    const turnTypeElement = document.createElement('div');
+    turnTypeElement.innerHTML = turnTypeHTML;
+    document.getElementById('turnbyturn-dir').appendChild(turnTypeElement);
+}
+
+
+// Function to get SVG based on turn type
+function getSVGForTurnType(turnType) {
+    if (turnType === 'Continue straight') {
+        return `<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M440-120v-567l-64 63-56-56 160-160 160 160-56 56-64-63v567h-80Z"/></svg>`;
+    } else if (turnType === 'Turn left') {
+        return `<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M600-160v-360H272l64 64-56 56-160-160 160-160 56 56-64 64h328q33 0 56.5 23.5T680-520v360h-80Z"/></svg>`;
+    } else {
+        return `<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M280-160v-360q0-33 23.5-56.5T360-600h328l-64-64 56-56 160 160-160 160-56-56 64-64H360v360h-80Z"/></svg>`;
+    }
+}
+
+
 }
