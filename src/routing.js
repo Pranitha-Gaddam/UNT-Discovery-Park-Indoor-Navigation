@@ -170,10 +170,9 @@ function findRoute(source, destination) {
 // .addTo(map);
 
 const layerids = [];
-
+var i = 0;
 function addPathsLayer(point1, point2) {
-    var i = 0;
-    var layerid = i;
+    var layerid = String(i);
     map.addLayer({
         "id": layerid,
         "type": "line",
