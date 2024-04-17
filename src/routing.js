@@ -170,9 +170,12 @@ function findRoute(source, destination) {
 // .addTo(map);
 
 const layerids = [];
-var i = 0;
+var incre = 1;
+
 function addPathsLayer(point1, point2) {
-    var layerid = String(i);
+
+    var layerid = String(incre);
+
     map.addLayer({
         "id": layerid,
         "type": "line",
@@ -195,12 +198,14 @@ function addPathsLayer(point1, point2) {
             "line-width": 8 // Adjust width as needed
         }
     });
+
     //console.log('Paths layer added to the map.');
     layerids.push(layerid);
-    i++;
+    incre++;
     return layerid;
 
 }
+
 
 function removeLayer(layerid) {
     if (map.getLayer(layerid)) { // Check if the layer exists
