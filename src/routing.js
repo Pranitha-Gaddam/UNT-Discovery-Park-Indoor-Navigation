@@ -172,7 +172,8 @@ function findRoute(source, destination) {
 const layerids = [];
 
 function addPathsLayer(point1, point2) {
-    const layerid = String(point1)+String(point2);
+    var i = 0;
+    const layerid = i;
     map.addLayer({
         "id": layerid,
         "type": "line",
@@ -197,6 +198,7 @@ function addPathsLayer(point1, point2) {
     });
     //console.log('Paths layer added to the map.');
     layerids.push(layerid);
+    i++;
     return layerid;
 
 }
