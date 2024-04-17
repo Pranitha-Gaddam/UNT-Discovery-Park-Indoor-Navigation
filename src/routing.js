@@ -173,7 +173,7 @@ const layerids = [];
 
 function addPathsLayer(point1, point2) {
     var i = 0;
-    const layerid = i;
+    var layerid = i;
     map.addLayer({
         "id": layerid,
         "type": "line",
