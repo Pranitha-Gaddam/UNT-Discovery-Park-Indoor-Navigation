@@ -2,7 +2,7 @@ import path1 from "./path1.js";
 import path2 from "./path2.js";
 import nearestPointOnLine from '@turf/nearest-point-on-line';
 import { lineString, point, distance} from "@turf/turf";
-
+var incre = 1;
 
 // const startRoom = [ -97.15388509288465, 33.25476053520956 ]; // Example point coordinates
 // const endRoom = [ -97.15353978483283, 33.254924324421239 ];
@@ -170,9 +170,10 @@ function findRoute(source, destination) {
 // .addTo(map);
 
 const layerids = [];
-
 function addPathsLayer(point1, point2) {
-    const layerid = String(point1)+String(point2);
+
+    var layerid = String(incre);
+
     map.addLayer({
         "id": layerid,
         "type": "line",
@@ -195,11 +196,13 @@ function addPathsLayer(point1, point2) {
             "line-width": 8 // Adjust width as needed
         }
     });
+
     //console.log('Paths layer added to the map.');
     layerids.push(layerid);
+    incre++;
     return layerid;
-
 }
+
 
 function removeLayer(layerid) {
     if (map.getLayer(layerid)) { // Check if the layer exists
