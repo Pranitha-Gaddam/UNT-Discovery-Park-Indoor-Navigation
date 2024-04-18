@@ -1,6 +1,7 @@
 body {
     height: 100%;
     width:100%;
+    font-family: 'Times New Roman', Times, serif;
 }
 
 .modal-dialog {
@@ -20,6 +21,28 @@ body {
 
 .bi-person-wheelchair {
     height: 20px;
+}
+/* Style for menu buttons */
+.menu-button {
+    display: block;
+    width: 100%;
+    padding: 10px 0;
+    text-align: left;
+    border: none;
+    background-color: transparent;
+    font-size: 16px;
+    color: #333;
+    transition: background-color 0.3s;
+}
+
+.menu-button:hover {
+    background-color: #f0f0f0;
+}
+
+/* Style for menu divider */
+.menu-divider {
+    margin: 10px 0;
+    border-top: 1px solid #ccc;
 }
 
 .sidebar {
