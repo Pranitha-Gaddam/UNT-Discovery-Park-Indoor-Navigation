@@ -1,39 +1,48 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const mysql = require('mysql');
+const bodyParser = require('body-parser');
 
 const app = express();
-const port = 3000;
 
-// Create connection pool to MySQL database
-const pool = mysql.createPool({
-    connectionLimit: 10,
-    host: 'localhost',
-    user: 'username',
-    password: 'password',
-    database: 'feedback_db'
+// MySQL connection configuration
+const connection = mysql.createConnection({
+  host: '127.0.0.1',
+  user: 'root',
+  password: 'password123',
+  database: 'feedback_database'
+});
+
+// Connect to MySQL
+connection.connect(err => {
+  if (err) {
+    console.error('Error connecting to MySQL:', err);
+    return;
+  }
+  console.log('Connected to MySQL database');
 });
 
 // Middleware to parse JSON bodies
 app.use(bodyParser.json());
 
-// Route to handle feedback submission
+// POST route to handle feedback submission
 app.post('/submit-feedback', (req, res) => {
-    const { feedback, date } = req.body;
+  const feedbackText = req.body.feedback;
+  const currentDate = new Date().toLocaleString();
 
-    // Insert feedback into the database
-    pool.query('INSERT INTO feedback (feedback_text, creation_date) VALUES (?, ?)', [feedback, date], (error, results, fields) => {
-        if (error) {
-            console.error('Error inserting feedback:', error);
-            res.status(500).json({ message: 'Internal server error' });
-        } else {
-            console.log('Feedback inserted successfully');
-            res.status(200).json({ message: 'Feedback submitted successfully' });
-        }
-    });
+  const query = 'INSERT INTO feedback (text, date) VALUES (?, ?)';
+  connection.query(query, [feedbackText, currentDate], (err, result) => {
+    if (err) {
+      console.error('Error saving feedback to database:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+    console.log('Feedback saved to database');
+    res.status(200).send('Feedback submitted successfully');
+  });
 });
 
 // Start the server
-app.listen(port, () => {
-    console.log(`Server is listening at http://localhost:${port}`);
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });

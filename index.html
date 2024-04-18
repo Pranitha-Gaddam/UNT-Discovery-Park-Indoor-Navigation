@@ -37,7 +37,7 @@
 
 
     <script src="https://kit.fontawesome.com/192dc35a35.js" crossorigin="anonymous"></script>
-    <script type="module" src="src/script.js"></script> <!-- .js file for color contrast features-->
+    <script src="src/script.js"></script> <!-- .js file for color contrast features-->
     <script type="module" src="src/routing.js"></script>
     <script src="src/dijkstra.js"></script>
     <script src="src/pathData.js"></script>
@@ -71,43 +71,82 @@
      </div>
  
      <!-- Feedback Modal -->
-     <div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
-         <div class="modal-dialog">
-             <div class="modal-content">
-                 <div class="modal-header">
-                     <h5 class="modal-title" id="feedbackModalLabel">Feedback</h5>
-                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                 </div>
-                 <div class="modal-body">
-                     <form id="feedbackForm">
-                         <div class="mb-3">
-                             <label for="feedbackText" class="form-label">Your Feedback</label>
-                             <textarea class="form-control" id="feedbackText" rows="3"></textarea>
-                         </div>
-                         <button type="submit" class="btn btn-primary">Submit</button>
-                     </form>
-                 </div>
-             </div>
-         </div>
-     </div>
+<!-- Feedback Modal 
+<div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="feedbackModalLabel">Feedback</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="feedbackText" class="form-label">Your Feedback</label>
+                        <textarea class="form-control" id="feedbackText" rows="3"></textarea>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="submitFeedbackButton">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+-->
+
  
-     <!-- Menu -->
-     <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar-items" aria-labelledby="offcanvasExampleLabel">
-         <div class="offcanvas-header">
-           <h5 class="offcanvas-title" id="offcanvasExampleLabel">Discovery Park Indoor Navigation</h5>
-           <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-         </div>
-         <div class="offcanvas-body">
-             <ul class="sidebar" style="font-family: 'Arial', sans-serif; font-size: 16px;">
-                 <li><a class = "btn sidebar-items" href="#" data-bs-toggle="modal" data-bs-target="#adjustmentModal" onclick="createSliders()">Adjust Color</a></li>
-                 <li><a class = "btn sidebar-items" href="#" id="feedbackButton" data-bs-toggle="modal" data-bs-target="#feedbackModal">Feedback</a></li>
-                 <li class="form-check form-switch">
-                     <input class="form-check-input" type="checkbox" id="wheelchairToggle" onchange="toggleWheelchairRouting()">
-                     <label class="form-check-label" for="wheelchairToggle">Wheelchair Routing</label>
-                 </li>
-             </ul>
-         </div>
-     </div> 
+     <!-- Menu 
+ <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar-items" aria-labelledby="offcanvasExampleLabel">
+    <div class="offcanvas-header" style="background-color: green; color: white;">
+      <h5 class="offcanvas-title" id="offcanvasExampleLabel">Discovery Park Indoor Navigation</h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <ul class="sidebar" style="font-family: 'Arial', serif; font-size: 16px;">
+            <li><a class="btn sidebar-items" href="#" data-bs-toggle="modal" data-bs-target="#adjustmentModal" onclick="createSliders()">Adjust Color</a></li>
+            <li class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="wheelchairToggle" onchange="toggleWheelchairRouting()">
+                <label class="form-check-label" for="wheelchairToggle">Wheelchair Routing</label>
+            </li>
+            <li>
+                <div class="feedback-section">
+                    <label for="feedbackTextarea" class="form-label">Feedback</label>
+                    <textarea class="form-control" id="feedbackTextarea" rows="3"></textarea>
+                    <button type="button" class="btn btn-primary" onclick="submitFeedback()">Submit</button>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+-->
+<!-- Menu -->
+<div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar-items" aria-labelledby="offcanvasExampleLabel">
+    <div class="offcanvas-header" style="background-color: green; color: white;">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel">Discovery Park Indoor Navigation</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <ul class="sidebar" style="font-family: 'Arial', Serif; font-size: 16px;">
+            <li class="menu-item">
+                <button class="menu-button adjust-color" data-bs-toggle="modal" data-bs-target="#adjustmentModal" onclick="createSliders()">Adjust Color</button>
+            </li>
+            <hr class="menu-divider">
+            <li class="menu-item">
+                <div class="feedback-section">
+                    <label for="feedbackTextarea" class="form-label">Feedback</label>
+                    <textarea class="form-control" id="feedbackTextarea" rows="3"></textarea>
+                    <button type="button" class="btn btn-primary" onclick="submitFeedback()">Submit</button>
+                </div>
+                <hr class="menu-divider">
+            </li>
+            <li class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="wheelchairToggle" onchange="toggleWheelchairRouting()">
+                <label class="form-check-label" for="wheelchairToggle">Wheelchair Routing</label>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
  
      <!-- Mapping -->        
      <div id="map">
