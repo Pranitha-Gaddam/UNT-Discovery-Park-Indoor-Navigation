@@ -239,7 +239,17 @@ body {
     width: 100%;
 }
 
-
+#geolocate {
+    position: fixed;
+    z-index: 1000;
+    bottom: 160px; /* Position the button at the bottom */
+    right: 10px; /* Position the button at the right */
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    cursor: pointer;
+    box-shadow: 1;
+}
 
 
 

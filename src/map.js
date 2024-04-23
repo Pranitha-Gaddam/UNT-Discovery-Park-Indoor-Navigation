@@ -34,20 +34,7 @@ console.log("end: ", endRoom);
         });
         map.addControl(nav, 'top-right');
         
-         // Add geolocate control to the map.
-         map.addControl(
-    new mapboxgl.GeolocateControl({
-        positionOptions: {
-            enableHighAccuracy: true
-        },
-        // When active the map will receive updates to the device's location as it changes.
-        trackUserLocation: true,
-        // Draw an arrow next to the location dot to indicate which direction the device is heading.
-        showUserHeading: true
-    }),
-    'bottom-left'
-); 
-
+        
         // Fetch the data.json file
         fetch('data/data.geojson')
             .then(response => response.json()) // Parse the JSON data
@@ -96,6 +83,7 @@ console.log("end: ", endRoom);
                 return matchingFeatures;
             }
 
+            
             // Add the control to the map.
             const geocoder = new MapboxGeocoder({
                 accessToken: mapboxgl.accessToken,
@@ -120,6 +108,46 @@ console.log("end: ", endRoom);
                 localGeocoder: forwardGeocoder,  
                         
             });
+            
+            // Add event listener for 'direction-button' outside of geolocate function
+            document.getElementById('geolocate').addEventListener('click', function () {
+                geocoder1.fire('result', {
+                    result: {
+                        geometry: {
+                            coordinates: startRoom.coordinates
+                        }
+                    }
+                });
+                // ask for user on which floor ?
+            });
+
+        
+            document.getElementById('geolocate').addEventListener('click', function () {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(position => {
+                        const { latitude, longitude } = position.coords;
+                        map.flyTo({
+                            center: [longitude, latitude],
+                            zoom: 18,
+                            essential: true
+                        });
+
+                        // Set the startRoom coordinates to the current location
+                        startRoom.coordinates = [longitude, latitude];
+
+                        // Set the input of the geocoder to "current user location"
+                        geocoder1.setInput("current user location");
+                    }, error => {
+                        console.error('Error getting location:', error);
+                    });
+                } else {
+                    console.log('Geolocation API not supported in this browser.');
+                }
+            });
+
+    
+            // Add this code to the bottom of your file
+            document.getElementById('geolocate').addEventListener('click', geolocate);
     
             // Add the geocoder to your existing searchbar form
             document.getElementById('searchbar').appendChild(geocoder.onAdd(map));
@@ -251,7 +279,7 @@ console.log("end: ", endRoom);
             zoom: 18, // Example zoom level
             essential: true // prevents user from cancelling the transition
         });
-
+        indoorEqual.setLevel('1');
     });
 
 
