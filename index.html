@@ -48,158 +48,110 @@
 <body>
 
      <!-- Modal -->
-     <div class="modal fade" id="adjustmentModal" tabindex="-1" aria-labelledby="adjustmentModalLabel"
-     aria-hidden="true">
-     <div class="modal-dialog">
-         <div class="modal-content">
-             <div class="modal-header">
-                 <h5 class="modal-title" id="adjustmentModalLabel">Color Adjustment</h5>
-                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-             </div>
-             <div class="modal-body">
-                 <div id="adjustmentButtons" class="adjustment-buttons">
-                     <!-- Color wheel container -->
-                     <div id="hueWheelContainer"></div>
-                 </div>
-             </div>
-             <div class="modal-footer">
-                 <button type="button" class="btn btn-primary" onclick="savePreferences()">Save</button>
-                 <button type="button" class="btn btn-primary" onclick="resetPreferences()">Reset</button>
-             </div>
-         </div>
-     </div>
-     </div>
- 
-     <!-- Feedback Modal -->
-<!-- Feedback Modal 
-<div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="feedbackModalLabel">Feedback</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="mb-3">
-                        <label for="feedbackText" class="form-label">Your Feedback</label>
-                        <textarea class="form-control" id="feedbackText" rows="3"></textarea>
+    <div class="modal fade" id="adjustmentModal" tabindex="-1" aria-labelledby="adjustmentModalLabel"
+    aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="adjustmentModalLabel">Color Adjustment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="adjustmentButtons" class="adjustment-buttons">
+                        <!-- Color wheel container -->
+                        <div id="hueWheelContainer"></div>
                     </div>
-                    <button type="button" class="btn btn-primary" id="submitFeedbackButton">Submit</button>
-                </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="savePreferences()">Save</button>
+                    <button type="button" class="btn btn-primary" onclick="resetPreferences()">Reset</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
--->
 
- 
-     <!-- Menu 
- <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar-items" aria-labelledby="offcanvasExampleLabel">
-    <div class="offcanvas-header" style="background-color: green; color: white;">
-      <h5 class="offcanvas-title" id="offcanvasExampleLabel">Discovery Park Indoor Navigation</h5>
-      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-        <ul class="sidebar" style="font-family: 'Arial', serif; font-size: 16px;">
-            <li><a class="btn sidebar-items" href="#" data-bs-toggle="modal" data-bs-target="#adjustmentModal" onclick="createSliders()">Adjust Color</a></li>
-            <li class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" id="wheelchairToggle" onchange="toggleWheelchairRouting()">
-                <label class="form-check-label" for="wheelchairToggle">Wheelchair Routing</label>
-            </li>
-            <li>
-                <div class="feedback-section">
-                    <label for="feedbackTextarea" class="form-label">Feedback</label>
-                    <textarea class="form-control" id="feedbackTextarea" rows="3"></textarea>
-                    <button type="button" class="btn btn-primary" onclick="submitFeedback()">Submit</button>
-                </div>
-            </li>
-        </ul>
-    </div>
-</div>
--->
-<!-- Menu -->
-<div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar-items" aria-labelledby="offcanvasExampleLabel">
-    <div class="offcanvas-header" style="background-color: green; color: white;">
-        <h5 class="offcanvas-title" id="offcanvasExampleLabel">Discovery Park Indoor Navigation</h5>
-        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-        <ul class="sidebar" style="font-family: 'Arial', Serif; font-size: 16px;">
-            <li class="menu-item">
-                <button class="menu-button adjust-color" data-bs-toggle="modal" data-bs-target="#adjustmentModal" onclick="createSliders()">Adjust Color</button>
-            </li>
-            <hr class="menu-divider">
-            <li class="menu-item">
-                <div class="feedback-section">
-                    <label for="feedbackTextarea" class="form-label">Feedback</label>
-                    <textarea class="form-control" id="feedbackTextarea" rows="3"></textarea>
-                    <button type="button" class="btn btn-primary" onclick="submitFeedback()">Submit</button>
-                </div>
+    <!-- Menu -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar-items" aria-labelledby="offcanvasExampleLabel">
+        <div class="offcanvas-header" style="background-color: green; color: white;">
+            <h5 class="offcanvas-title" id="offcanvasExampleLabel">Discovery Park Indoor Navigation</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <ul class="sidebar" style="font-family: 'Arial', Serif; font-size: 16px;">
+                <li class="menu-item">
+                    <button class="menu-button adjust-color" data-bs-toggle="modal" data-bs-target="#adjustmentModal" onclick="createSliders()">Adjust Color</button>
+                </li>
                 <hr class="menu-divider">
-            </li>
-            <li class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" id="wheelchairToggle" onchange="toggleWheelchairRouting()">
-                <label class="form-check-label" for="wheelchairToggle">Wheelchair Routing</label>
-            </li>
-        </ul>
+                <li class="menu-item">
+                    <div class="feedback-section">
+                        <label for="feedbackTextarea" class="form-label">Feedback</label>
+                        <textarea class="form-control" id="feedbackTextarea" rows="3"></textarea>
+                        <button type="button" class="btn btn-primary" onclick="submitFeedback()">Submit</button>
+                    </div>
+                    <hr class="menu-divider">
+                </li>
+                <li class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="wheelchairToggle" onchange="toggleWheelchairRouting()">
+                    <label class="form-check-label" for="wheelchairToggle">Wheelchair Routing</label>
+                </li>
+            </ul>
+        </div>
     </div>
-</div>
 
 
  
-     <!-- Mapping -->        
-     <div id="map">
-         <!--information bar-->
-         <div class="info_bar">
-            
-             <div id="searchinfo">
-                 <a class="menu-icon" data-bs-toggle="offcanvas" href="#sidebar-items" role="button" aria-controls="offcanvasExample">
-                     <svg xmlns="http://www.w3.org/2000/svg" height="40" viewBox="0 -960 960 960" width="24" >
-                         <path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"/>
-                     </svg>
-                 </a>
-                 <form id="searchbar"> </form>
-                 <a class="direction-icon" id="direction-button" role="button">
-                     <svg xmlns="http://www.w3.org/2000/svg" height="40" viewBox="0 -960 960 960" width="24"><path d="M320-360h80v-120h140v100l140-140-140-140v100H360q-17 0-28.5 11.5T320-520v160ZM480-80q-15 0-29.5-6T424-104L104-424q-12-12-18-26.5T80-480q0-15 6-29.5t18-26.5l320-320q12-12 26.5-18t29.5-6q15 0 29.5 6t26.5 18l320 320q12 12 18 26.5t6 29.5q0 15-6 29.5T856-424L536-104q-12 12-26.5 18T480-80Z"/></svg>
-                 <a>
-             </div>
- 
-             <div id="pois-box">
-                 <button id="searchRestRoomButton" class="searchRestRoomButton pois"><i class="fas fa-restroom"></i> Restrooms</button>
-                 <button id="searchElevatorButton" class="searchRestRoomButton pois"><i class="fas fa-elevator"></i> Elevators</button>
-                 <button id="searchStairsButton" class="searchStairButton pois"><i class="fa-solid fa-stairs"></i> Stairs</button>
-             </div>
-             
-         </div>
- 
-         <!--recenter button-->
-         <button class="btn btn-outline-success" type="button" id="recenter"
-         onclick="goBackToCenter()"><i class="bi bi-house-fill"></i></button>
- 
-         <!--directions-->
-         <div id="directions">
-             <div id="direction-search-zone">
- 
-                 <div id="backbutton" role="button"> 
-                     <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M640-80 240-480l400-400 71 71-329 329 329 329-71 71Z"/></svg>
-                 </div>
-                 
-                 <div id="search-zone">
-                     <div id="search-box start"><form id="start"> </form></div>
-                     <div id="search-box end"><form id="end"> </form></div> 
-                 </div>
-                 
-             </div>
-         </div>
-         <div id="turnbyturn-info">
-            <div id="mile-time">
-                <div id="time">Time Here</div>
-                <div id="mile">(Mile Here)</div>
+    <!-- Mapping -->        
+    <div id="map">
+        <!--information bar-->
+        <div class="info_bar">
+        
+            <div id="searchinfo">
+                <a class="menu-icon" data-bs-toggle="offcanvas" href="#sidebar-items" role="button" aria-controls="offcanvasExample">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="40" viewBox="0 -960 960 960" width="24" >
+                        <path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"/>
+                    </svg>
+                </a>
+                <form id="searchbar"> </form>
+                <a class="direction-icon" id="direction-button" role="button">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="40" viewBox="0 -960 960 960" width="24"><path d="M320-360h80v-120h140v100l140-140-140-140v100H360q-17 0-28.5 11.5T320-520v160ZM480-80q-15 0-29.5-6T424-104L104-424q-12-12-18-26.5T80-480q0-15 6-29.5t18-26.5l320-320q12-12 26.5-18t29.5-6q15 0 29.5 6t26.5 18l320 320q12 12 18 26.5t6 29.5q0 15-6 29.5T856-424L536-104q-12 12-26.5 18T480-80Z"/></svg>
+                <a>
             </div>
-            <div id="turnbyturn-dir"></div>
-         </div>
-     </div>
+
+            <div id="pois-box">
+                <button id="searchRestRoomButton" class="searchRestRoomButton pois"><i class="fas fa-restroom"></i> Restrooms</button>
+                <button id="searchElevatorButton" class="searchRestRoomButton pois"><i class="fas fa-elevator"></i> Elevators</button>
+                <button id="searchStairsButton" class="searchStairButton pois"><i class="fa-solid fa-stairs"></i> Stairs</button>
+            </div>
+            
+        </div>
+
+        <!--recenter button-->
+        <button class="btn btn-outline-success" type="button" id="recenter"
+        onclick="goBackToCenter()"><i class="bi bi-house-fill"></i></button>
+
+        <!--directions-->
+        <div id="directions">
+            <div id="direction-search-zone">
+
+                <div id="backbutton" role="button"> 
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M640-80 240-480l400-400 71 71-329 329 329 329-71 71Z"/></svg>
+                </div>
+                
+                <div id="search-zone">
+                    <div id="search-box start"><form id="start"> </form></div>
+                    <div id="search-box end"><form id="end"> </form></div> 
+                </div>
+                
+            </div>
+        </div>
+        <div id="turnbyturn-info">
+        <!-- <div id="mile-time">
+            <div id="time">Time Here</div>
+            <div id="mile">(Mile Here)</div>
+        </div> -->
+        <div id="turnbyturn-dir"></div>
+        </div>
+    </div>
 
     <!--direction dialogue box - will move it to different file later-->
     <script>
@@ -229,16 +181,6 @@
                 turnbyturnBox.style.display = "none";
             });
         });
-
-        // document.addEventListener("DOMContentLoaded", function() {
-        //     const backButton = document.getElementById('backbutton');
-        //     const turnbyturnBox = document.getElementById("turnbyturn-dir");
-        //     backButton.addEventListener('click', function() {
-                
-        //         turnbyturnBox.innerHTML = '';
-        //     });
-        // });
-
 
     </script>
 

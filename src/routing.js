@@ -168,8 +168,7 @@ function findRoute(source, destination) {
 // const endMarker = new mapboxgl.Marker()
 // .setLngLat(destination.point.geometry.coordinates)
 // .addTo(map);
-
-const layerids = [];
+window.layerids = [];
 function addPathsLayer(point1, point2) {
 
     var layerid = String(incre);
@@ -297,13 +296,14 @@ document.getElementById('backbutton').addEventListener('click', function() {
     });
 });
 
+
 // displayTurnbyTurn function
 function displayTurnbyTurn(angle) {
     const turnType = determineTurnType(angle);
     const turnTypeHTML = `<div id="eachturn">${getSVGForTurnType(turnType)} ${turnType}</div>`;
     const turnTypeElement = document.createElement('div');
     turnTypeElement.innerHTML = turnTypeHTML;
-    document.getElementById('turnbyturn-dir').appendChild(turnTypeElement);
+    document.getElementById('turnbyturn-info').appendChild(turnTypeElement);
 }
 
 

@@ -33,8 +33,9 @@ console.log("end: ", endRoom);
             visualizePitch: true
         });
         map.addControl(nav, 'top-right');
-     // Add geolocate control to the map.
- map.addControl(
+        
+         // Add geolocate control to the map.
+         map.addControl(
     new mapboxgl.GeolocateControl({
         positionOptions: {
             enableHighAccuracy: true
@@ -142,6 +143,42 @@ console.log("end: ", endRoom);
                 openTurnbyTurn.style.display = "block";
             });
 
+            geocoder1.on('clear', function() {
+                startRoom.coordinates = undefined;
+                window.layerids.forEach(layerId => {
+                    if (map.getLayer(layerId)) {
+                        map.removeLayer(layerId);
+                        map.removeSource(layerId);
+                    }
+                })
+                window.layerids = [];
+                var eachTurnDivs = document.querySelectorAll('#eachturn');
+                eachTurnDivs.forEach(function(div) {
+                    div.remove(); // Remove each div
+                });
+
+                var turnByTurnDir = document.getElementById('turnbyturn-info');
+                turnByTurnDir.style.display = 'none'; // Hide the div
+            })
+
+            geocoder2.on('clear', function() {
+                endRoom.coordinates = undefined; 
+                window.layerids.forEach(layerId => {
+                    if (map.getLayer(layerId)) {
+                        map.removeLayer(layerId);
+                        map.removeSource(layerId);
+                    }
+                })
+                window.layerids = [];
+                var eachTurnDivs = document.querySelectorAll('#eachturn');
+                eachTurnDivs.forEach(function(div) {
+                    div.remove(); // Remove each div
+                });
+
+                var turnByTurnDir = document.getElementById('turnbyturn-info');
+                turnByTurnDir.style.display = 'none'; // Hide the div
+            })
+
             function resetMapboxGeocoder() {
                 geocoder1.clear(); // Clear the geocoder input
                 geocoder2.clear(); // Clear the geocoder input
@@ -161,7 +198,7 @@ console.log("end: ", endRoom);
                     bounds.extend(endRoom.coordinates);
                     map.fitBounds(bounds, { padding: 50 });
                     if (startRoom.coordinates != undefined && endRoom.coordinates != undefined) {
-                        console.log(findNodeByCoordinate([ -97.15387406945061, 33.25485939795162 ]));
+                        // console.log(findNodeByCoordinate([ -97.15387406945061, 33.25485939795162 ]));
                         startRoute(startRoom, endRoom);
                     }
                 }
@@ -204,29 +241,6 @@ console.log("end: ", endRoom);
                 const query = e.result.text;
                 handleSearchButtonClick(query, map, markers);
             });
-            geocoder1.on('clear', function() {
-                // Assuming layerids is an array of layer IDs
-                window.layerids.forEach(layerId => {
-                    if (map.getLayer(layerId)) {
-                        map.removeLayer(layerId);
-                        map.removeSource(layerId);
-                    }
-                });
-                // Clear the layerids array
-                window.layerids = [];
-            });
-
-            geocoder2.on('clear', function() {
-                // Assuming layerids is an array of layer IDs
-                window.layerids.forEach(layerId => {
-                    if (map.getLayer(layerId)) {
-                        map.removeLayer(layerId);
-                        map.removeSource(layerId);
-                    }
-                });
-                // Clear the layerids array
-                window.layerids = [];
-            });
         }
         indoorEqual.setLevel('1');
     });
@@ -237,6 +251,7 @@ console.log("end: ", endRoom);
             zoom: 18, // Example zoom level
             essential: true // prevents user from cancelling the transition
         });
+
     });
 
 
