@@ -115,7 +115,7 @@ console.log("end: ", endRoom);
             const geocoder = new MapboxGeocoder({
                 accessToken: mapboxgl.accessToken,
                 localGeocoder: forwardGeocoder,
-                zoom: 25,
+                zoom: 18,
                 placeholder: 'Search for rooms',
                 mapboxgl: mapboxgl,
             });
