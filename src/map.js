@@ -44,7 +44,6 @@ console.log("end: ", endRoom);
                  trackUserLocation: true,
                  // Draw an arrow next to the location dot to indicate which direction the device is heading.
                  showUserHeading: true,
-                 zoom : 25
              }),
              'bottom-left'
         ); 
