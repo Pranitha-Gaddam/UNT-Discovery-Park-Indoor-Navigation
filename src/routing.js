@@ -169,7 +169,7 @@ function findRoute(source, destination) {
 // .setLngLat(destination.point.geometry.coordinates)
 // .addTo(map);
 
-const layerids = [];
+window.layerids = [];
 function addPathsLayer(point1, point2) {
 
     var layerid = String(incre);
