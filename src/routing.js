@@ -107,19 +107,19 @@ function floor1to2(source, f1, destination, f2) {
         console.log("Climb stairs");
     }
 
-    const turnTypeHTML = `<div id="eachturn">
+    let turnTypeHTML = `<div id="eachturn">
     <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M480-120 320-280l56-56 64 63v-414l-64 63-56-56 160-160 160 160-56 57-64-64v414l64-63 56 56-160 160Z"/></svg>
     Next floor </div>`;
-    const turnTypeElement = document.createElement('div');
+    let turnTypeElement = document.createElement('div');
     turnTypeElement.innerHTML = turnTypeHTML;
     document.getElementById('turnbyturn-dir').appendChild(turnTypeElement);
 
-    // const turnTypeHTML = `<div id="eachturn">
-    // <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M440-120v-567l-64 63-56-56 160-160 160 160-56 56-64-63v567h-80Z"/></svg>
-    // Continue straight </div>`;
-    // const turnTypeElement = document.createElement('div');
-    // turnTypeElement.innerHTML = turnTypeHTML;
-    // document.getElementById('turnbyturn-dir').appendChild(turnTypeElement);
+    let turnTypeHTML = `<div id="eachturn">
+    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M440-120v-567l-64 63-56-56 160-160 160 160-56 56-64-63v567h-80Z"/></svg>
+    Continue straight </div>`;
+    let turnTypeElement = document.createElement('div');
+    turnTypeElement.innerHTML = turnTypeHTML;
+    document.getElementById('turnbyturn-dir').appendChild(turnTypeElement);
 
     if (bestPath2.path != null) {
         drawRoute(bestPath2.path, coord2, destination);
