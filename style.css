@@ -182,6 +182,10 @@ body {
     justify-content: center;
 }
 
+#end .mapboxgl-ctrl-geocoder {
+    z-index: 0;
+}
+
 #backbutton {
     height: 100%;
     width: 7%;
