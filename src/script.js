@@ -122,6 +122,7 @@ function resetPreferences() {
 
     // Update slider labels
     updateSliders();
+    window.location.reload();
 }
 
 function savePreferences() {
@@ -160,6 +161,7 @@ document.getElementById('searchbar').addEventListener('submit', function(event) 
 // Submit feedback function
 function submitFeedback() {
     alert('Thank you for your feedback!');
+    window.location.reload();
     const feedbackText = document.getElementById('feedbackTextarea').value;
 /*
     fetch('/submit-feedback', {
