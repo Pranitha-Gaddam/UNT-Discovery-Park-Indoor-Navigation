@@ -122,7 +122,7 @@ function resetPreferences() {
 
     // Update slider labels
     updateSliders();
-    window.location.reload();
+    //window.location.reload();
 }
 
 function savePreferences() {
@@ -163,7 +163,7 @@ function submitFeedback() {
     alert('Thank you for your feedback!');
 
 
-     window.location.reload();
+     //window.location.reload();
     const feedbackText = document.getElementById('feedbackTextarea').value;
 /*
     fetch('/submit-feedback', {
