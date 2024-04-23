@@ -34,19 +34,25 @@ console.log("end: ", endRoom);
         });
         map.addControl(nav, 'top-right');
         
-        // Add geolocate control to the map.
-         map.addControl(
-             new mapboxgl.GeolocateControl({
-                 positionOptions: {
-                     enableHighAccuracy: true
-                 },
-                 // When active the map will receive updates to the device's location as it changes.
-                 trackUserLocation: true,
-                 // Draw an arrow next to the location dot to indicate which direction the device is heading.
-                 showUserHeading: true,
-             }),
-             'bottom-left'
-        ); 
+        const geolocateControl = new mapboxgl.GeolocateControl({
+            positionOptions: {
+                enableHighAccuracy: true
+            },
+            trackUserLocation: true,
+            showUserHeading: true
+        });
+        
+        map.addControl(geolocateControl, 'bottom-left');
+        
+        // Listen for the 'geolocate' event on the geolocate control
+        geolocateControl.on('geolocate', function(e) {
+            let coords = [e.coords.longitude, e.coords.latitude];
+            // Set the map view to the user's location with a custom zoom level
+            map.flyTo({
+                center: coords,
+                zoom: 20 // Set your desired zoom level here
+            });
+        });
         
         
         // Add event listener for 'result' event outside of geolocate function
