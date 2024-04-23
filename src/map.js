@@ -34,6 +34,22 @@ console.log("end: ", endRoom);
         });
         map.addControl(nav, 'top-right');
         
+        // Add geolocate control to the map.
+        // map.addControl(
+        //     new mapboxgl.GeolocateControl({
+        //         positionOptions: {
+        //             enableHighAccuracy: true
+        //         },
+        //         // When active the map will receive updates to the device's location as it changes.
+        //         trackUserLocation: true,
+        //         // Draw an arrow next to the location dot to indicate which direction the device is heading.
+        //         showUserHeading: true
+        //     }),
+        //     'bottom-left'
+        // ); 
+        
+        
+        // Add event listener for 'result' event outside of geolocate function
         
         // Fetch the data.json file
         fetch('data/data.geojson')
@@ -50,6 +66,17 @@ console.log("end: ", endRoom);
             // Your forwardGeocoder function using the fetched data
             function forwardGeocoder(query) {
                 const matchingFeatures = [];
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const currentLocation = {
+                        place_name: 'Use Current Location',
+                        center: [position.coords.longitude, position.coords.latitude],
+                        place_type: ['current_location']
+                    };
+                    matchingFeatures.push(currentLocation);
+                    console.log("Current Location:", currentLocation.center);
+                }, function(error) {
+                    console.error("Error getting current location:", error);
+                });
                 for (const feature of data.features) {
                     // Handle queries with different capitalization
                     // than the source data by calling toLowerCase().
@@ -90,7 +117,7 @@ console.log("end: ", endRoom);
                 localGeocoder: forwardGeocoder,
                 zoom: 25,
                 placeholder: 'Search for rooms',
-                mapboxgl: mapboxgl
+                mapboxgl: mapboxgl,
             });
 
             const geocoder1 = new MapboxGeocoder({
@@ -98,7 +125,8 @@ console.log("end: ", endRoom);
                 localGeocoder: forwardGeocoder,
                 mapboxgl: mapboxgl,
                 placeholder: 'Starting Point',
-                zoom: 20,                
+                zoom: 20,  
+                container: 'geocoder1-container'             
             });
 
             const geocoder2 = new MapboxGeocoder({
@@ -106,48 +134,10 @@ console.log("end: ", endRoom);
                 mapboxgl: mapboxgl,
                 placeholder: 'Destination',
                 localGeocoder: forwardGeocoder,  
+                localGeocoderOnly: true,
                         
             });
-            
-            // Add event listener for 'direction-button' outside of geolocate function
-            document.getElementById('geolocate').addEventListener('click', function () {
-                geocoder1.fire('result', {
-                    result: {
-                        geometry: {
-                            coordinates: startRoom.coordinates
-                        }
-                    }
-                });
-                // ask for user on which floor ?
-            });
-
-        
-            document.getElementById('geolocate').addEventListener('click', function () {
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(position => {
-                        const { latitude, longitude } = position.coords;
-                        map.flyTo({
-                            center: [longitude, latitude],
-                            zoom: 18,
-                            essential: true
-                        });
-
-                        // Set the startRoom coordinates to the current location
-                        startRoom.coordinates = [longitude, latitude];
-
-                        // Set the input of the geocoder to "current user location"
-                        geocoder1.setInput("current user location");
-                    }, error => {
-                        console.error('Error getting location:', error);
-                    });
-                } else {
-                    console.log('Geolocation API not supported in this browser.');
-                }
-            });
-
-    
-            // Add this code to the bottom of your file
-            document.getElementById('geolocate').addEventListener('click', geolocate);
+                        
     
             // Add the geocoder to your existing searchbar form
             document.getElementById('searchbar').appendChild(geocoder.onAdd(map));
@@ -281,6 +271,58 @@ console.log("end: ", endRoom);
         });
         indoorEqual.setLevel('1');
     });
+
+    document.getElementById('geolocate').addEventListener('click', () => {
+        findUserCoords();
+    });
+    
+    let firstTime = true;
+    let userMarker;
+    function findUserCoords() {
+    if ("geolocation" in navigator) {
+        // Get the user's current position
+        navigator.geolocation.watchPosition(function(position) {
+            // Access the latitude and longitude coordinates
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+            var projectedCoordinates;
+            
+            // Use the coordinates as needed
+            console.log("Latitude:", latitude);
+            console.log("Longitude:", longitude);
+            projectedCoordinates = projectLiveCoordinates({ coordinates:[longitude, latitude], floor: 1 });
+            if (firstTime) {
+                userMarker = new mapboxgl.Marker().setLngLat(projectedCoordinates).addTo(map);
+                firstTime = false;
+            }
+            //projectedCoordinates = projectLiveCoordinates({ coordinates:[longitude, latitude], floor: 1 });
+            userMarker.setLngLat(projectedCoordinates).addTo(map);
+            userMarker.setColor("red");
+            
+            // const marker = new mapboxgl.Marker().setLngLat([longitude, latitude]).addTo(map)
+            // Update your map or perform other actions with the coordinates
+        }, function(error) {
+            // Handle errors
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    console.error("User denied the request for Geolocation.");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    console.error("Location information is unavailable.");
+                    break;
+                case error.TIMEOUT:
+                    console.error("The request to get user location timed out.");
+                    break;
+                case error.UNKNOWN_ERROR:
+                    console.error("An unknown error occurred.");
+                    break;
+            }
+        });
+    } else {
+        // Geolocation is not supported by the browser
+        console.error("Geolocation is not supported.");
+    }
+    };
 
 
         

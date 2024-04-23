@@ -2,6 +2,7 @@ import path1 from "./path1.js";
 import path2 from "./path2.js";
 import nearestPointOnLine from '@turf/nearest-point-on-line';
 import { lineString, point, distance} from "@turf/turf";
+
 var incre = 1;
 
 // const startRoom = [ -97.15388509288465, 33.25476053520956 ]; // Example point coordinates
@@ -168,6 +169,7 @@ function findRoute(source, destination) {
 // const endMarker = new mapboxgl.Marker()
 // .setLngLat(destination.point.geometry.coordinates)
 // .addTo(map);
+
 window.layerids = [];
 function addPathsLayer(point1, point2) {
 
@@ -296,14 +298,13 @@ document.getElementById('backbutton').addEventListener('click', function() {
     });
 });
 
-
 // displayTurnbyTurn function
 function displayTurnbyTurn(angle) {
     const turnType = determineTurnType(angle);
     const turnTypeHTML = `<div id="eachturn">${getSVGForTurnType(turnType)} ${turnType}</div>`;
     const turnTypeElement = document.createElement('div');
     turnTypeElement.innerHTML = turnTypeHTML;
-    document.getElementById('turnbyturn-info').appendChild(turnTypeElement);
+    document.getElementById('turnbyturn-dir').appendChild(turnTypeElement);
 }
 
 
@@ -319,4 +320,50 @@ function getSVGForTurnType(turnType) {
 }
 
 
+}
+
+export function projectLiveCoordinates(pointToCheck) {
+    let closestLine = null;
+    let closestProjection = null;
+    let minDistance = Infinity;
+    // Loop through each feature in your GeoJSON data
+    if (pointToCheck.floor == 1) {
+    path1.features.forEach(feature => {
+        // Check if the feature represents a LineString
+        if (feature.geometry.type === 'LineString') {
+            // Convert GeoJSON LineString to Turf LineString
+            const turfLine = lineString(feature.geometry.coordinates);
+            // Find the nearest projection of the sample point on the line
+            const nearestPoint = nearestPointOnLine(turfLine, pointToCheck.coordinates);
+            // Calculate the distance between the original point and the projection point
+            const dis = nearestPoint.properties.dist;
+            // Update closestLine and closestProjection if this line's projection is closer
+            if (dis < minDistance) {
+                minDistance = dis;
+                closestLine = turfLine;
+                closestProjection = nearestPoint;
+            }
+        }
+    });
+}
+if (pointToCheck.floor == 2) {
+    path2.features.forEach(feature => {
+        // Check if the feature represents a LineString
+        if (feature.geometry.type === 'LineString') {
+            // Convert GeoJSON LineString to Turf LineString
+            const turfLine = lineString(feature.geometry.coordinates);
+            // Find the nearest projection of the sample point on the line
+            const nearestPoint = nearestPointOnLine(turfLine, pointToCheck.coordinates);
+            // Calculate the distance between the original point and the projection point
+            const dis = nearestPoint.properties.dist;
+            // Update closestLine and closestProjection if this line's projection is closer
+            if (dis < minDistance) {
+                minDistance = dis;
+                closestLine = turfLine;
+                closestProjection = nearestPoint;
+            }
+        }
+    });
+}
+    return closestProjection.geometry.coordinates;
 }
