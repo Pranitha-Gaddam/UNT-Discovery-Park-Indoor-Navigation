@@ -204,6 +204,29 @@ console.log("end: ", endRoom);
                 const query = e.result.text;
                 handleSearchButtonClick(query, map, markers);
             });
+            geocoder1.on('clear', function() {
+                // Assuming layerids is an array of layer IDs
+                window.layerids.forEach(layerId => {
+                    if (map.getLayer(layerId)) {
+                        map.removeLayer(layerId);
+                        map.removeSource(layerId);
+                    }
+                });
+                // Clear the layerids array
+                window.layerids = [];
+            });
+
+            geocoder2.on('clear', function() {
+                // Assuming layerids is an array of layer IDs
+                window.layerids.forEach(layerId => {
+                    if (map.getLayer(layerId)) {
+                        map.removeLayer(layerId);
+                        map.removeSource(layerId);
+                    }
+                });
+                // Clear the layerids array
+                window.layerids = [];
+            });
         }
         indoorEqual.setLevel('1');
     });
