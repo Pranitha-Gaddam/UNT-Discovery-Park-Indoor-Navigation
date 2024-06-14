@@ -1,4 +1,8 @@
-import { startRoute } from "./routing.js";
+import { displayPathLines, startRoute } from "./routing.js";
+
+window.onload = function() {
+    alert("This is a work in progress! Routing is only available for K-wing, however multi-floor routing is still available within K-wing.");
+}
 
 mapboxgl.accessToken = 'pk.eyJ1Ijoia2ltdm8yMTExIiwiYSI6ImNsdGcwYmhoajB2czcyanA3YWlpZGh6dHQifQ.Niu8tgHPbGDSq09zYRBAFg';
 let startRoom = {coordinates: undefined, floor: undefined};
@@ -8,25 +12,52 @@ console.log("end: ", endRoom);
     window.map = new mapboxgl.Map({
         container: 'map',
         style: 'mapbox://styles/mapbox/streets-v11', // Example style, replace with your own
-        center: [-97.153715, 33.254811], // Example center coordinates
-        zoom: 19.7 // Example zoom level
+        center: [-97.153474, 33.254411], // Example center coordinates
+        zoom: 18 // Example zoom level
     });
+
+    window.floor = 1;
+
+    
 
     map.on('style.load', function() {
         const indoorEqual = new IndoorEqual(map, { apiKey: 'iek_WQaPa637GiMUujPIMZtRAm1FbHsX' });
         indoorEqual.loadSprite('./node_modules/mapbox-gl-indoorequal/sprite/indoorequal');
         
-        // Function to handle changing the level based on the selected option
-        function changeLevel() {
+        // // Function to handle changing the level based on the selected option
+        function changeFloor(floorNum) {
             // Get the selected value from the floor selector
-            const selectedLevel = document.getElementById('floorSelector').value;
-
+            //const selectedLevel = document.getElementById('floorSelector').value;
+    
             // Call a function to change the level based on the selected option
-            indoorEqual.setLevel(selectedLevel);
+            indoorEqual.setLevel(String(floorNum));
+            // if (floor === '1') {
+            //     document.getElementById('floor1').style.backgroundColor = '#265626';
+            //     document.getElementById('floor1').style.color = '#fff';
+            //     document.getElementById('floor2').style.backgroundColor = '#fff';
+            //     document.getElementById('floor2').style.color = '#000';
+            // }
+            // else {
+            //     document.getElementById('floor2').style.backgroundColor = '#265626';
+            //     document.getElementById('floor2').style.color = '#fff';
+            //     document.getElementById('floor1').style.backgroundColor = '#fff';
+            //     document.getElementById('floor1').style.color = '#000';
+            // }
+            floor = floorNum;
+            if (floor === 1) {
+                document.getElementById('floor1').classList.add('active');
+                document.getElementById('floor2').classList.remove('active');
+            }
+            else {
+                document.getElementById('floor2').classList.add('active');
+                document.getElementById('floor1').classList.remove('active');
+            }
+            displayPathLines(floor);
         }
-
+        document.getElementById('floor1').addEventListener('click', () => {changeFloor(1)});
+        document.getElementById('floor2').addEventListener('click', () => {changeFloor(2)});
         
-        map.addControl(indoorEqual);
+        //map.addControl(indoorEqual);
         
         // Add zoom and rotation controls to the map.
         const nav = new mapboxgl.NavigationControl({
@@ -42,7 +73,7 @@ console.log("end: ", endRoom);
             showUserHeading: true
         });
         
-        map.addControl(geolocateControl, 'bottom-left');
+        map.addControl(geolocateControl, 'top-right');
         
         // Listen for the 'geolocate' event on the geolocate control
         geolocateControl.on('geolocate', function(e) {
@@ -102,13 +133,14 @@ console.log("end: ", endRoom);
 
 
                         matchingFeatures.push(feature);
+                        console.log("Matching features:", matchingFeatures);
                         
 
                         // Check if the room is on floor 2 and switch the level accordingly
                         if (feature.properties.level === 2) {
-                            indoorEqual.setLevel('2');
+                            changeFloor(2);
                         } else if (feature.properties.level === 1) {
-                            indoorEqual.setLevel('1');
+                            changeFloor(1);
                         }
                     
                     }
@@ -169,13 +201,13 @@ console.log("end: ", endRoom);
 
             geocoder1.on('clear', function() {
                 startRoom.coordinates = undefined;
-                window.layerids.forEach(layerId => {
+                Object.keys(layerids).forEach(layerId => {
                     if (map.getLayer(layerId)) {
                         map.removeLayer(layerId);
                         map.removeSource(layerId);
                     }
                 })
-                window.layerids = [];
+                window.layerids = {};
                 var eachTurnDivs = document.querySelectorAll('#eachturn');
                 eachTurnDivs.forEach(function(div) {
                     div.remove(); // Remove each div
@@ -187,13 +219,13 @@ console.log("end: ", endRoom);
 
             geocoder2.on('clear', function() {
                 endRoom.coordinates = undefined; 
-                window.layerids.forEach(layerId => {
+                Object.keys(layerids).forEach(layerId => {
                     if (map.getLayer(layerId)) {
                         map.removeLayer(layerId);
                         map.removeSource(layerId);
                     }
                 })
-                window.layerids = [];
+                window.layerids = {};
                 var eachTurnDivs = document.querySelectorAll('#eachturn');
                 eachTurnDivs.forEach(function(div) {
                     div.remove(); // Remove each div
@@ -224,13 +256,17 @@ console.log("end: ", endRoom);
                     if (startRoom.coordinates != undefined && endRoom.coordinates != undefined) {
                         // console.log(findNodeByCoordinate([ -97.15387406945061, 33.25485939795162 ]));
                         startRoute(startRoom, endRoom);
+                        changeFloor(startRoom.floor);
                     }
                 }
             }
 
             const addMarkers = (features, map, markersArray) => {
                 features.forEach(feature => {
-                    const marker = new mapboxgl.Marker().setLngLat(feature.center).addTo(map);
+                    // const el = document.createElement('div');
+                    // el.className = 'marker';
+                    // el.innerHTML = '<i class="bi bi-geo-alt-fill"></i>';
+                    const marker = new mapboxgl.Marker({ "color": "#265626"}).setLngLat(feature.center).addTo(map);
                     markersArray.push(marker);
                 });
             };
@@ -266,7 +302,9 @@ console.log("end: ", endRoom);
                 handleSearchButtonClick(query, map, markers);
             });
         }
-        indoorEqual.setLevel('1');
+        changeFloor(floor);
+        console.log("floor initially: ", floor);
+        document.getElementById('floor1').classList.add('active');
     });
     document.getElementById('recenter').addEventListener('click', () => {
         // Fly to a center location
@@ -275,7 +313,7 @@ console.log("end: ", endRoom);
             zoom: 18, // Example zoom level
             essential: true // prevents user from cancelling the transition
         });
-        indoorEqual.setLevel('1');
+        changeFloor(floor);
     });
 
     document.getElementById('geolocate').addEventListener('click', () => {
@@ -298,7 +336,7 @@ console.log("end: ", endRoom);
             console.log("Longitude:", longitude);
             projectedCoordinates = projectLiveCoordinates({ coordinates:[longitude, latitude], floor: 1 });
             if (firstTime) {
-                userMarker = new mapboxgl.Marker().setLngLat(projectedCoordinates).addTo(map);
+                userMarker = new mapboxgl.Marker({"color": '#265626'}).setLngLat(projectedCoordinates).addTo(map);
                 firstTime = false;
             }
             //projectedCoordinates = projectLiveCoordinates({ coordinates:[longitude, latitude], floor: 1 });

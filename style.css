@@ -1,7 +1,7 @@
 body {
     height: 100%;
     width:100%;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: 'Roboto Flex', sans-serif; /* Arial font */
 }
 
 .modal-dialog {
@@ -26,7 +26,6 @@ body {
 .menu-button {
     display: block;
     width: 100%;
-    padding: 10px 0;
     text-align: left;
     border: none;
     background-color: transparent;
@@ -35,20 +34,13 @@ body {
     transition: background-color 0.3s;
 }
 
-.menu-button:hover {
-    background-color: #f0f0f0;
-}
-
 /* Style for menu divider */
-.menu-divider {
-    margin: 10px 0;
-    border-top: 1px solid #ccc;
-}
 
 .sidebar {
     list-style: none;
     width: 100%;
     padding-left: 0;
+    border: none;
 }
 
 /* CSS to position the accessibility mode switch */
@@ -85,6 +77,8 @@ body {
 #searchinfo {
     display: inline-block;
     background-color: white;
+    box-shadow: 0 1px 2px rgba(63, 68, 64, 0.3),0 1px 3px 1px rgba(59, 68, 61, 0.15);
+    border-radius: 5px;
 }
 
 #searchbar {
@@ -95,6 +89,7 @@ body {
 .menu-icon {
     display: inline-block;
     margin-left: 10px;
+    
 }
 
 .direction-icon {
@@ -131,33 +126,59 @@ body {
     width: 50%;
 }
 
-.pois {
+#pois-box button {
     background-color: #fff; /* White background */
-    border: 1px solid #ccc; /* Add a light gray border */
-    border-radius: 12px; /* Add border-radius for rounded corners */
+    /* border: 1px solid #ccc;  */
+    border-radius: 15px; /* Add border-radius for rounded corners */
     color: black; /* Dark green text */
-    padding: 0px 12px; /* Adjust padding */
-    font-size: 14px; /* Adjust font size */
+    padding: 5px 20px; /* Adjust padding */
+    font-size: 15px; /* Adjust font size */
     cursor: pointer; /* Mouse pointer on hover */
-    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease; /* Smooth transition */
+    /* transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease; Smooth transition */
     align-items: center;
+    margin-right: 5px;
+    font-family: "Roboto Flex", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+    white-space: pre;
+    box-shadow: 0 1px 2px rgba(63, 68, 64, 0.3),0 1px 3px 1px rgba(59, 68, 61, 0.15);
+    border: none;
+    
 }
+
+
+#pois-box button:active {
+    color: #000000;;
+    transform: scale(0.99);
+}
+
+#pois-box button:hover {
+    background-color: #f0f0f0;
+    box-shadow: 0 1px 2px rgba(65, 69, 66, 0.3),0 3px 3px 1px rgba(39, 42, 40, 0.15);
+}
+
 
 #recenter {
     position: fixed;
     z-index: 1000;
-    bottom: 100px; /* Position the button at the bottom */
-    right: 10px; /* Position the button at the right */
+    top: 145px; /* Position the button at the bottom */
+    right: 9px; /* Position the button at the right */
     background-color: #fff;
     border: 1px solid #ccc;
-    padding: 5px 10px;
+    padding: 2px 6.5px;
     cursor: pointer;
     box-shadow: 1;
 }
 
+#recenter:hover {
+    background-color: #f0f0f0;
+    color: black;
+}
+
 .btn-outline-success {
     color: black;
-    box-shadow: 0 0 0 2px rgb(0 0 0 / 10%);
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 10%);
 }
 
 #directions {
@@ -246,7 +267,7 @@ body {
 #geolocate {
     position: fixed;
     z-index: 1000;
-    bottom: 160px; /* Position the button at the bottom */
+    top: 160px; /* Position the button at the bottom */
     right: 10px; /* Position the button at the right */
     background-color: #fff;
     border: 1px solid #ccc;
@@ -255,5 +276,139 @@ body {
     box-shadow: 1;
 }
 
+#floor_buttons {
+    position: fixed;
+    z-index: 1000;
+    bottom: 50px; /* Position the button at the bottom */
+    right: 10px; /* Position the button at the right */
+    padding: auto;
+}
+
+#floor_buttons button {
+    display: block;
+}
 
 
+#floor1, #floor2 {
+    background-color: #ffffff; /* Green background */
+    color: #000000; /* White text */
+    padding: 20px 25px; /* Padding */
+    text-align: center; /* Center the text */
+    text-decoration: none; /* Remove underline */
+    font-size: 20px; /* Text size */
+    margin: 10px; /* Margin */
+    cursor: pointer; /* Cursor on hover */
+    border: none; /* No border */
+    border-radius: 40px; /* Slightly rounded corners */
+    box-shadow: 0 2px 2px rgba(105, 105, 105, 0.8); /* Add shadow */
+    transition: all 0.3s ease;
+}
+#floor1:hover, #floor2:hover {
+    background-color: #f0f0f0; /* Darker green background on hover */
+    color: #000000; /* Lighter text on hover */
+    box-shadow: 0 3px 3px rgba(121, 121, 121, 0.8);
+}
+
+#floor1:active, #floor2:active {
+    background-color: #c2c2c2; /* White background */
+    color: #000000; /* Black text */
+    transform: scale(0.95);
+}
+
+#floor1.active, #floor2.active {
+    background-color: #265626; /* White background */
+    color: #ffffff; /* Black text */
+    box-shadow: 0 2px 2px rgba(80, 80, 80, 0.8);
+}
+
+i {
+    color: #265626;
+}
+.offcanvas {
+    background-color: #f6f6f6; /* Light gray background */
+    color: #343a40; /* Dark gray text */
+    transition: all 0.3s ease; /* Transition */
+    border: none;
+    width: 300px;
+}
+
+.offcanvas-header {
+    background-color: #265626; /* Dark gray background */
+    color: #f8f9fa; /* Light gray text */
+    padding: 15px; /* Padding */
+}
+
+
+.offcanvas-title {
+    font-family: 'Roboto Flex', sans-serif; /* Arial font */
+    font-size: 16px; /* Text size */
+    font-weight: 500;
+}
+
+
+.menu-button {
+    width: 100%;
+    color: #000000; 
+    font-size: 16px; 
+    cursor: pointer; 
+}
+
+.menu-button:hover {
+    color: #367436; 
+}
+
+.menu-item:hover {
+    color: #367436;
+}
+
+.form-check-input {
+    cursor: pointer;
+}
+
+.form-check-input:checked {
+    background-color: #265626; /* Green background when checked */
+    border-color: #265626; /* Green border when checked */
+}
+
+.menu-item.form-switch {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#feedback-button {
+    position: fixed;
+    z-index: 1000;
+    background-color: #265626;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    cursor: pointer;
+    box-shadow: 1;
+}
+
+
+
+.feedback-section button {
+    margin-top: 5px;
+}
+
+.sidebar{
+    display: flex;
+    flex-direction: column;
+    border: none;
+    width: 100%;
+}
+
+.menu-item {
+    border-bottom: solid 1px #b9b9b9;
+    padding: 10px;
+    width: 100%;
+}
+
+.feedback-section {
+    display: block;
+}
+
+#feedback {
+    border: none;
+}

@@ -34,6 +34,9 @@
     <link rel="stylesheet" href="node_modules/mapbox-gl/src/css/mapbox-gl.css" type="text/css">
     <!--my style.css-->
     <link href="style.css" rel="stylesheet" type="text/css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&family=Roboto+Slab:wght@100..900&family=Signika+Negative:wght@300..700&display=swap" rel="stylesheet">
 
 
     <script src="https://kit.fontawesome.com/192dc35a35.js" crossorigin="anonymous"></script>
@@ -42,10 +45,43 @@
     <script src="src/dijkstra.js"></script>
     <script src="src/pathData.js"></script>
     <script src="src/turn.js"></script>
+
+    <!--all scripts start here-->
+    <script src="https://unpkg.com/mapbox-gl-indoorequal@latest/dist/mapbox-gl-indoorequal.umd.min.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.2.0/mapbox-gl-directions.js"></script>
+    <script type="module" src="src/map.js" ></script>
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+        integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+        crossorigin="anonymous"></script>
+    
+        <!-- <script type="text/javascript">
+            function changeFloor(floor) {
+        // Get the selected value from the floor selector
+        //const selectedLevel = document.getElementById('floorSelector').value;
+
+        // Call a function to change the level based on the selected option
+        indoorEqual.setLevel(floor);
+    }
+        </script> -->
+
+        <script type="text/javascript">
+            function changeFloor(floor) {
+        console.log("Floor");
+        indoorEqual.setLevel(floor);
+    }
+        </script>
 </head>
 
 
 <body>
+    
 
      <!-- Modal -->
     <div class="modal fade" id="adjustmentModal" tabindex="-1" aria-labelledby="adjustmentModalLabel"
@@ -72,27 +108,26 @@
 
     <!-- Menu -->
     <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar-items" aria-labelledby="offcanvasExampleLabel">
-        <div class="offcanvas-header" style="background-color: green; color: white;">
-            <h5 class="offcanvas-title" id="offcanvasExampleLabel">Discovery Park Indoor Navigation</h5>
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasExampleLabel">Discovery Park Navigation</h5>
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
-            <ul class="sidebar" style="font-family: 'Arial', Serif; font-size: 16px;">
+            <ul class="sidebar">
                 <li class="menu-item">
                     <button class="menu-button adjust-color" data-bs-toggle="modal" data-bs-target="#adjustmentModal" onclick="createSliders()">Adjust Color</button>
                 </li>
-                <hr class="menu-divider">
-                <li class="menu-item">
+                
+                <li class="menu-item form-switch">
+                    <label class="form-check-label" for="wheelchairToggle">Wheelchair Routing</label>
+                    <input class="form-check-input" type="checkbox" id="wheelchairToggle">
+                </li>
+                <li class="menu-item" id="feedback">
                     <div class="feedback-section">
                         <label for="feedbackTextarea" class="form-label">Feedback</label>
-                        <textarea class="form-control" id="feedbackTextarea" rows="3"></textarea>
-                        <button type="button" class="btn btn-primary" onclick="submitFeedback()">Submit</button>
+                        <textarea class="form-control" id="feedbackTextarea" rows="3" placeholder="Enter your feedback here..."></textarea>
+                        <button type="button" class="btn btn-primary" id="feedback-button" onclick="submitFeedback()">Submit</button>
                     </div>
-                    <hr class="menu-divider">
-                </li>
-                <li class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="wheelchairToggle" onchange="toggleWheelchairRouting()">
-                    <label class="form-check-label" for="wheelchairToggle">Wheelchair Routing</label>
                 </li>
             </ul>
         </div>
@@ -118,15 +153,21 @@
             </div>
 
             <div id="pois-box">
-                <button id="searchRestRoomButton" class="searchRestRoomButton pois"><i class="fas fa-restroom"></i> Restrooms</button>
-                <button id="searchElevatorButton" class="searchRestRoomButton pois"><i class="fas fa-elevator"></i> Elevators</button>
-                <button id="searchStairsButton" class="searchStairButton pois"><i class="fa-solid fa-stairs"></i> Stairs</button>
+                <button id="searchRestRoomButton" class="searchRestRoomButton pois"><i class="fas fa-restroom" ></i>   Restrooms</button>
+                <button id="searchElevatorButton" class="searchRestRoomButton pois"><i class="fas fa-elevator"></i>   Elevators</button>
+                <button id="searchStairsButton" class="searchStairButton pois"><i class="fa-solid fa-stairs"></i>   Stairs</button>
             </div>
+
             
+            
+        </div>
+        <div id="floor_buttons">
+            <button type="button" id="floor1" class="floor_button" title="Floor 1">1</button>
+            <button type="button" id="floor2" class="floor_button" title="Floor 2">2</button>
         </div>
 
         <!--recenter button-->
-        <button class="btn btn-outline-success" type="button" id="recenter"
+        <button class="btn btn-outline-success" type="button" id="recenter" title="Recenter to Discovery Park"
         onclick="goBackToCenter()"><i class="bi bi-house-fill"></i></button>
 
         <!--directions-->
@@ -186,20 +227,7 @@
 
     </script>
 
-    <!--all scripts start here-->
-    <script src="https://unpkg.com/mapbox-gl-indoorequal@latest/dist/mapbox-gl-indoorequal.umd.min.js"></script>
-    <script src="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.js"></script>
-    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
-    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.2.0/mapbox-gl-directions.js"></script>
-    <script type="module" src="src/map.js" ></script>
     
-
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
-        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
-        integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
-        crossorigin="anonymous"></script>
 </body>
 
 </html>

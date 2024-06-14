@@ -18,15 +18,16 @@ function determineTurnType(angle) {
     if (angle > 180) {
         angle = angle - (360);
     }
-    if (angle <= 10 && angle >= -10) {
-        return "Continue straight";
-    }
+    // if (angle <= 10 && angle >= -10) {
+    //     return "Continue straight";
+    // }
     else if (angle>80 && angle<=100) {
         return "Turn left";
     }
     else if (angle<=-80 && angle>=-100) {
         return "Turn right";
     }
+    else { return null;}
 }
 
 // const turnByTurnDirections = generateTurnByTurnDirections(geoRoute);

@@ -3,10 +3,52 @@ import path2 from "./path2.js";
 import nearestPointOnLine from '@turf/nearest-point-on-line';
 import { lineString, point, distance} from "@turf/turf";
 
-var incre = 1;
+window.incre = 1;
+window.layerids = {};
+// window.addedLayers = [];
 
 // const startRoom = [ -97.15388509288465, 33.25476053520956 ]; // Example point coordinates
 // const endRoom = [ -97.15353978483283, 33.254924324421239 ];
+
+export function displayPathLines(floorNum) {
+    // addedLayers.forEach(layerId => {
+    //     map.removeLayer(layerId); // Remove each layer
+    //     map.removeSource(layerId);
+    // });
+    // addedLayers = [];
+    // console.log("layerids: ", layerids);
+    Object.keys(layerids).forEach(layerid => {
+        if (map.getLayer(layerid)) {
+            map.removeLayer(layerid);
+            map.removeSource(layerid);
+        }
+        if (layerid[0] == floorNum) {
+            map.addLayer({
+                "id": layerid,
+                "type": "line",
+                "source": {
+                    "type": "geojson",
+                    "data": {
+                        "type": "Feature", // GeoJSON feature type
+                        "geometry": {
+                            "type": "LineString",
+                            "coordinates": layerids[layerid]
+                        }
+                    }
+                },
+                "layout": {
+                    "line-join": "round",
+                    "line-cap": "round"
+                },
+                "paint": {
+                    "line-color": "#265626", // Adjust color as needed
+                    "line-width": 8 // Adjust width as needed
+                }
+            });
+            // addedLayers.push(layerid);
+        }
+    });
+}
 export function startRoute(startRoom, endRoom) {
 var source = projectPoint(startRoom);
 var destination = projectPoint(endRoom);
@@ -90,6 +132,7 @@ function floor1to2(source, f1, destination, f2) {
             bestPath2 = pathFromDest;
             c1 = coord1;
             c2 = coord2;
+            minPathCost = pathFromSource.dist+pathFromDest.dist;
         }
     }
     // const startMarker = new mapboxgl.Marker({ "color": "#b40219" })
@@ -101,7 +144,7 @@ function floor1to2(source, f1, destination, f2) {
     // .addTo(map);
     
     if (bestPath1.path != null) {
-        drawRoute(bestPath1.path, source, coord1);
+        drawRoute(bestPath1.path, source, coord1, f1);
     }
     else {
         console.log("Climb stairs");
@@ -122,7 +165,7 @@ function floor1to2(source, f1, destination, f2) {
     document.getElementById('turnbyturn-dir').appendChild(continueStraightElement);
 
     if (bestPath2.path != null) {
-        drawRoute(bestPath2.path, coord2, destination);
+        drawRoute(bestPath2.path, coord2, destination, f2);
     }
     else {
         console.log("Continue straight");
@@ -177,68 +220,73 @@ function findRoute(source, destination) {
 // .setLngLat(destination.point.geometry.coordinates)
 // .addTo(map);
 
-window.layerids = [];
-function addPathsLayer(point1, point2) {
 
-    var layerid = String(incre);
-
-    map.addLayer({
-        "id": layerid,
-        "type": "line",
-        "source": {
-            "type": "geojson",
-            "data": {
-                "type": "Feature", // GeoJSON feature type
-                "geometry": {
-                    "type": "LineString",
-                    "coordinates": [point1, point2]
-                }
-            }
-        },
-        "layout": {
-            "line-join": "round",
-            "line-cap": "round"
-        },
-        "paint": {
-            "line-color": "#0066ff", // Adjust color as needed
-            "line-width": 8 // Adjust width as needed
-        }
-    });
+function addPathsLayer(point1, point2, floorNum) { 
+    console.log("floorNum: ", floorNum);
+    console.log("incre: ", incre);
+    var layerid = String(floorNum) + String(incre);
+    console.log("layerid: ", layerid);
+    // map.addLayer({
+    //     "id": layerid,
+    //     "type": "line",
+    //     "source": {
+    //         "type": "geojson",
+    //         "data": {
+    //             "type": "Feature", // GeoJSON feature type
+    //             "geometry": {
+    //                 "type": "LineString",
+    //                 "coordinates": [point1, point2]
+    //             }
+    //         }
+    //     },
+    //     "layout": {
+    //         "line-join": "round",
+    //         "line-cap": "round"
+    //     },
+    //     "paint": {
+    //         "line-color": "#0066ff", // Adjust color as needed
+    //         "line-width": 8 // Adjust width as needed
+    //     }
+    // });
 
     //console.log('Paths layer added to the map.');
-    layerids.push(layerid);
+    //layerids.push(layerid);
+    layerids[layerid] = [point1, point2];
+    console.log("layerids: ", layerids);
     incre++;
-    return layerid;
 }
+
+
 
 
 function removeLayer(layerid) {
     if (map.getLayer(layerid)) { // Check if the layer exists
         map.removeLayer(layerid); // Remove the layer
+        map.removeSource(layerid); // Remove the source
     }
 }
 
 // Function to handle paths layer loading
-function handlePathsLayer(point1, point2) {
+function handlePathsLayer(point1, point2, floorNum) {
     //console.log("p1: ", point1);
     //console.log("p2: ", point2);
     if (map.loaded()) {
         // Map has finished loading, add paths layer
-        const layerid = addPathsLayer(point1, point2);
+        addPathsLayer(point1, point2, floorNum);
 
     } else {
         // Map is still loading, wait for load event
         map.on('load', () => {
             // Map has finished loading, add paths layer
-            const layerid = addPathsLayer(point1, point2);
+            addPathsLayer(point1, point2, floorNum);
 
         });
     }
-    addPathsLayer(point1, point2);
+    addPathsLayer(point1, point2, floorNum);
 }
 
 
-function drawRoute(path, source, destination) {
+function drawRoute(path, source, destination, floorNum) {
     //int startNode = 1;
     var firstLoop = 1;
     var bearing1, bearing2;
@@ -248,7 +296,7 @@ function drawRoute(path, source, destination) {
         if (firstLoop == 1) {
             var point1 = source.point.geometry.coordinates;
             var point2 = NodeToCoordinates[(parseInt(path[i]-1))];
-            handlePathsLayer(point1, point2);
+            handlePathsLayer(point1, point2, floorNum);
             bearing1 = calculateBearing(point1, point2);
             point1 = point2;
             if (path.length == 1) {
@@ -266,20 +314,24 @@ function drawRoute(path, source, destination) {
             var point2 = destination.point.geometry.coordinates;
             bearing1 = bearing2;
             bearing2= calculateBearing(point1, point2);
-            handlePathsLayer((point1), point2);
+            handlePathsLayer((point1), point2, floorNum);
         }
         else {
             var point1 = NodeToCoordinates[(parseInt(path[i]-1))];
             var point2 = NodeToCoordinates[(parseInt(path[i+1]-1))];
-            handlePathsLayer(point1, point2);
+            handlePathsLayer(point1, point2, floorNum);
             bearing1 = bearing2;
             bearing2 = calculateBearing(point1, point2);
         }
         var angle = bearing1-bearing2;
 
+        console.log(layerids);
+
         displayTurnbyTurn(angle);
 
     }
+    displayPathLines(floorNum);
+
     
 }
 
@@ -290,15 +342,16 @@ if (startRoom.floor != endRoom.floor) {
 }
 else {
     finalPath = findRoute(source, destination);
-    drawRoute(finalPath.path, source, destination);
+    drawRoute(finalPath.path, source, destination, startRoom.floor);
 }
 
 
 // Event listener for back button click
 document.getElementById('backbutton').addEventListener('click', function() {
-    layerids.forEach(layerId => {
+    Object.keys(layerids).forEach(layerId => {
         removeLayer(layerId); // Remove each layer
     });
+    layerids = {}
     const turnByTurnDivs = document.querySelectorAll('#turnbyturn-dir #eachturn');
     turnByTurnDivs.forEach(div => {
         div.remove(); // Remove each div
@@ -308,10 +361,12 @@ document.getElementById('backbutton').addEventListener('click', function() {
 // displayTurnbyTurn function
 function displayTurnbyTurn(angle) {
     const turnType = determineTurnType(angle);
+    if (turnType) {
     const turnTypeHTML = `<div id="eachturn">${getSVGForTurnType(turnType)} ${turnType}</div>`;
     const turnTypeElement = document.createElement('div');
     turnTypeElement.innerHTML = turnTypeHTML;
     document.getElementById('turnbyturn-dir').appendChild(turnTypeElement);
+    }
 }
 
 
@@ -328,6 +383,8 @@ function getSVGForTurnType(turnType) {
 
 
 }
+
+
 
 export function projectLiveCoordinates(pointToCheck) {
     let closestLine = null;
