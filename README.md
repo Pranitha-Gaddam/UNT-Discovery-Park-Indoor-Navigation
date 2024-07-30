@@ -1,1 +1,1 @@
-An Indoor Navigation Website made for Discovery Park, UNT's Engineering building.
+An Indoor Navigation System made for Discovery Park, UNT's Engineering building.
